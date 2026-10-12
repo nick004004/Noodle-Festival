@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주문 접수 페이지</title>
+    <style id="dynamicStyle">
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #f0f2f5; color: #333; padding: 15px; }
+        
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .header-title-box { text-align: left; }
+        .store-badge { font-size: 0.8rem; background: #333; color: white; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: inline-block; margin-bottom: 3px; }
+        h1 { font-size: 1.3rem; color: #1a1a1a; }
+        
+        .admin-link-btn { background: #e4e6eb; color: #333; text-decoration: none; font-size: 0.8rem; font-weight: bold; padding: 8px 12px; border-radius: 8px; border: 1px solid #ccc; }
+
+        .connection-status { font-size: 0.8rem; color: #2e7d32; background: #e8f5e9; padding: 4px 10px; border-radius: 12px; display: inline-block; font-weight: bold; margin-bottom: 10px; }
+        
+        .container { display: flex; flex-direction: column; gap: 15px; max-width: 600px; margin: 0 auto; }
+        .card { background: white; padding: 18px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .card h2 { font-size: 1.05rem; margin-bottom: 12px; color: #007aff; }
+        
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.85rem; margin-bottom: 5px; font-weight: 600; color: #555; }
+        
+        .option-group { display: flex; gap: 6px; flex-wrap: wrap; }
+        .option-btn { flex: 1; min-width: 90px; padding: 12px 8px; border: 2px solid #ddd; background: #007aff; color: #ffffff; border-radius: 8px; font-size: 0.9rem; font-weight: bold; cursor: pointer; text-align: center; }
+        .option-btn.active { background: #34c759 !important; border-color: #34c759 !important; }
+
+        .menu-item-box { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 10px; padding: 12px; margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+        .menu-main-row { display: flex; justify-content: space-between; align-items: center; }
+        .qty-controls { display: flex; gap: 5px; }
+        .qty-btn { width: 32px; height: 32px; border: 1px solid #ccc; background: white; border-radius: 6px; font-weight: bold; cursor: pointer; }
+
+        .sub-options-box { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 5px; border-top: 1px dashed #ddd; padding-top: 8px; }
+        .sub-opt-btn { font-size: 0.75rem; padding: 4px 8px; border: 1px solid #ccc; background: #fff; border-radius: 4px; cursor: pointer; }
+        .sub-opt-btn.active { background: #5856d6; color: white; border-color: #5856d6; }
+
+        .submit-btn { width: 100%; background: #007aff; color: white; border: none; padding: 16px; border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 10px; }
+
+        #fullscreenToast {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.75); display: none; justify-content: center; align-items: center; z-index: 99999;
+        }
+        .toast-box { background: #ffffff; padding: 40px 30px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 400px; max-width: 90%; }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+</head>
+<body>
+
+    <div id="fullscreenToast">
+        <div class="toast-box">
+            <div style="font-size: 3.5rem; margin-bottom: 15px;">🎉</div>
+            <div style="font-size: 1.6rem; font-weight: bold; color: #34c759; margin-bottom: 8px;">주문이 완료되었습니다!</div>
+            <div style="font-size: 1.1rem; font-weight: bold; color: #555;">Order Completed!</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="header-title-box">
+                <span class="store-badge" id="displayStoreName">매장명</span>
+                <h1 id="displayOrderTitle">주문 접수 페이지</h1>
+            </div>
+            <a href="admin.html" class="admin-link-btn">⚙️ 관리자 설정</a>
+        </header>
+
+        <div class="connection-status" id="syncStatus">🔄 실시간 동기화 중...</div>
+
+        <div class="card">
+            <h2>📝 주문서 작성</h2>
+            <form id="orderForm">
+                <div class="form-group">
+                    <label>구분 (Order Type)</label>
+                    <div class="option-group" id="typeContainer"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>결제 방식 (Payment Method)</label>
+                    <div class="option-group" id="payContainer"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>메뉴 선택 및 세부 옵션</label>
+                    <div id="menuSelectionContainer"></div>
+                </div>
+
+                <button type="submit" id="mainSubmitBtn" class="submit-btn">주문 등록하기 🚀</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            databaseURL: "https://night-market-order-8a9ac-default-rtdb.firebaseio.com/"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let systemSettings = { storeName: '', orderTitle: '', types: [], pays: [], menus: [], theme: {} };
+        let selectedType = null;
+        let selectedPay = null;
+        let orderDetails = {}; // { '팟타이': { qty: 1, selectedOptions: ['매운맛'] } }
+
+        db.ref('system_settings').on('value', (snapshot) => {
+            document.getElementById('syncStatus').innerText = '🟢 실시간 연동됨';
+            const data = snapshot.val();
+            if (data) {
+                systemSettings = data;
+                applyTheme(systemSettings.theme);
+                document.getElementById('displayStoreName').innerText = systemSettings.storeName || '매장명';
+                document.getElementById('displayOrderTitle').innerText = systemSettings.orderTitle || '주문 접수';
+                renderOrderForm();
+            }
+        });
+
+        function applyTheme(theme) {
+            if (!theme) return;
+            const styleTag = document.getElementById('dynamicStyle');
+            styleTag.innerHTML += `
+                .option-btn { background: ${theme.btnBg} !important; color: ${theme.btnText} !important; }
+                .option-btn.active { background: ${theme.activeBtnBg} !important; border-color: ${theme.activeBtnBg} !important; }
+                .submit-btn { background: ${theme.submitBtnBg} !important; }
+            `;
+        }
+
+        function renderOrderForm() {
+            // Types
+            const typeContainer = document.getElementById('typeContainer');
+            typeContainer.innerHTML = '';
+            (systemSettings.types || []).forEach((t) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `option-btn ${selectedType === t ? 'active' : ''}`;
+                btn.innerText = t;
+                btn.onclick = () => { selectedType = t; renderOrderForm(); };
+                typeContainer.appendChild(btn);
+            });
+            if (!selectedType && systemSettings.types && systemSettings.types.length > 0) selectedType = systemSettings.types[0];
+
+            // Pays
+            const payContainer = document.getElementById('payContainer');
+            payContainer.innerHTML = '';
+            (systemSettings.pays || []).forEach((p) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `option-btn ${selectedPay === p ? 'active' : ''}`;
+                btn.innerText = p;
+                btn.onclick = () => { selectedPay = p; renderOrderForm(); };
+                payContainer.appendChild(btn);
+            });
+            if (!selectedPay && systemSettings.pays && systemSettings.pays.length > 0) selectedPay = systemSettings.pays[0];
+
+            // Menus
+            const menuContainer = document.getElementById('menuSelectionContainer');
+            menuContainer.innerHTML = '';
+            (systemSettings.menus || []).forEach(m => {
+                if (!orderDetails[m.name]) orderDetails[m.name] = { qty: 0, selectedOptions: [] };
+                
+                const box = document.createElement('div');
+                box.className = 'menu-item-box';
+                
+                let subOptionsHtml = '';
+                if (m.options && m.options.length > 0) {
+                    subOptionsHtml = `<div class="sub-options-box">`;
+                    m.options.forEach(opt => {
+                        const isSelected = orderDetails[m.name].selectedOptions.includes(opt);
+                        subOptionsHtml += `<button type="button" class="sub-opt-btn ${isSelected ? 'active' : ''}" onclick="toggleSubOption('${m.name}', '${opt}')">${opt}</button>`;
+                    });
+                    subOptionsHtml += `</div>`;
+                }
+
+                box.innerHTML = `
+                    <div class="menu-main-row">
+                        <div>
+                            <div style="font-weight:bold; font-size:1rem;">${m.name}</div>
+                            <div style="font-size:0.8rem; color:#666;">${Number(m.price).toLocaleString()}원</div>
+                        </div>
+                        <div class="qty-controls">
+                            <button type="button" class="qty-btn" onclick="changeQty('${m.name}', -1)">-</button>
+                            <span style="width:30px; text-align:center; line-height:32px; font-weight:bold;" id="qty_${m.name}">${orderDetails[m.name].qty}</span>
+                            <button type="button" class="qty-btn" style="background:#ff9500; color:white; border-color:#ff9500;" onclick="changeQty('${m.name}', 1)">+</button>
+                        </div>
+                    </div>
+                    ${subOptionsHtml}
+                `;
+                menuContainer.appendChild(box);
+            });
+        }
+
+        window.toggleSubOption = function(menuName, opt) {
+            let opts = orderDetails[menuName].selectedOptions;
+            if (opts.includes(opt)) {
+                orderDetails[menuName].selectedOptions = opts.filter(o => o !== opt);
+            } else {
+                opts.push(opt);
+            }
+            renderOrderForm();
+        }
+
+        window.changeQty = function(menuName, delta) {
+            let current = orderDetails[menuName].qty;
+            current += delta;
+            if (current < 0) current = 0;
+            if (current > 10) current = 10;
+            orderDetails[menuName].qty = current;
+            document.getElementById(`qty_${menuName}`).innerText = current;
+        }
+
+        document.getElementById('orderForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            let menuParts = [];
+            let totalQty = 0;
+
+            for (let [menu, detail] of Object.entries(orderDetails)) {
+                if (detail.qty > 0) {
+                    let optStr = detail.selectedOptions.length > 0 ? ` [${detail.selectedOptions.join(', ')}]` : '';
+                    menuParts.push(`${menu}${optStr} x ${detail.qty}`);
+                    totalQty += detail.qty;
+                }
+            }
+
+            if (totalQty === 0) { alert('메뉴를 1개 이상 선택해주세요!'); return; }
+
+            const now = new Date();
+            const newOrder = {
+                id: Date.now(),
+                type: selectedType,
+                payType: selectedPay,
+                menu: menuParts.join(' + '),
+                qty: totalQty,
+                time: now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+            };
+
+            db.ref('live_orders').once('value').then((snapshot) => {
+                let orders = snapshot.val() || [];
+                orders.push(newOrder);
+                db.ref('live_orders').set(orders).then(() => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    const toast = document.getElementById('fullscreenToast');
+                    toast.style.display = 'flex';
+                    setTimeout(() => {
+                        toast.style.display = 'none';
+                        orderDetails = {};
+                        renderOrderForm();
+                    }, 1500);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주방 실시간 보드</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #f0f2f5; color: #333; padding: 15px; }
+        
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .header-title-box { text-align: left; }
+        .store-badge { font-size: 0.8rem; background: #333; color: white; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: inline-block; margin-bottom: 3px; }
+        h1 { font-size: 1.3rem; color: #1a1a1a; }
+
+        .admin-link-btn { background: #e4e6eb; color: #333; text-decoration: none; font-size: 0.8rem; font-weight: bold; padding: 8px 12px; border-radius: 8px; border: 1px solid #ccc; }
+
+        .connection-status { font-size: 0.8rem; color: #2e7d32; background: #e8f5e9; padding: 4px 10px; border-radius: 12px; display: inline-block; font-weight: bold; margin-bottom: 10px; }
+        
+        .container { display: flex; flex-direction: column; gap: 15px; max-width: 600px; margin: 0 auto; }
+        .card { background: white; padding: 18px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .card h2 { font-size: 1.05rem; margin-bottom: 12px; color: #007aff; display: flex; justify-content: space-between; align-items: center; }
+
+        .order-items { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+        .order-card { background: #fff; border-left: 8px solid #007aff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.08); display: flex; flex-direction: column; gap: 10px; }
+        
+        .badge { font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; font-weight: bold; color: white; display: inline-block; background: #5856d6; }
+        .menu-name { font-size: 1.2rem; font-weight: bold; color: #111; line-height: 1.4; }
+        .time { font-size: 0.75rem; color: #888; }
+
+        .btn-group { display: flex; gap: 8px; }
+        .action-btn { flex: 1; padding: 12px; border-radius: 8px; font-size: 1rem; font-weight: bold; border: none; cursor: pointer; color: white; }
+        .done-btn { background: #34c759; flex: 2; }
+        .delete-btn { background: #ff3b30; flex: 1; }
+        .empty-msg { text-align: center; color: #888; padding: 30px; font-size: 0.9rem; }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="header-title-box">
+                <span class="store-badge" id="displayStoreName">매장명</span>
+                <h1 id="displayKitchenTitle">주방 실시간 보드</h1>
+            </div>
+            <a href="admin.html" class="admin-link-btn">⚙️ 관리자 설정</a>
+        </header>
+
+        <div class="connection-status" id="syncStatus">🔄 실시간 동기화 중...</div>
+
+        <div class="card">
+            <h2>
+                <span>🔥 실시간 주문 현황</span>
+                <span id="orderCountBadge" style="font-size:0.8rem; background:#007aff; color:white; padding:2px 8px; border-radius:10px;">0개</span>
+            </h2>
+            <div id="orderListContainer" class="order-items">
+                <div class="empty-msg">등록된 주문이 없습니다.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            databaseURL: "https://night-market-order-8a9ac-default-rtdb.firebaseio.com/"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let orders = [];
+
+        db.ref('system_settings').on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                document.getElementById('displayStoreName').innerText = data.storeName || '매장명';
+                document.getElementById('displayKitchenTitle').innerText = data.kitchenTitle || '주방 보드';
+            }
+        });
+
+        db.ref('live_orders').on('value', (snapshot) => {
+            document.getElementById('syncStatus').innerText = '🟢 실시간 연동됨';
+            orders = snapshot.val() || [];
+            renderKitchenOrders();
+        }, () => {
+            document.getElementById('syncStatus').innerText = '🔴 동기화 오류';
+        });
+
+        function renderKitchenOrders() {
+            const container = document.getElementById('orderListContainer');
+            const countBadge = document.getElementById('orderCountBadge');
+            
+            countBadge.innerText = `${orders.length}개`;
+            container.innerHTML = '';
+
+            if (orders.length === 0) {
+                container.innerHTML = `<div class="empty-msg">등록된 주문이 없습니다.</div>`;
+                return;
+            }
+
+            orders.forEach(order => {
+                const card = document.createElement('div');
+                card.className = 'order-card';
+                card.innerHTML = `
+                    <div>
+                        <span class="badge">${order.type}</span>
+                        <span class="badge" style="background:#ff9500;">${order.payType}</span>
+                    </div>
+                    <div class="menu-name">${order.menu}</div>
+                    <div class="time">주문 접수 시간: ${order.time}</div>
+                    <div class="btn-group">
+                        <button class="action-btn done-btn" onclick="completeOrder(${order.id})">조리 완료 ✅</button>
+                        <button class="action-btn delete-btn" onclick="deleteOrder(${order.id})">삭제 ❌</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        window.completeOrder = function(id) {
+            orders = orders.filter(o => o.id !== id);
+            db.ref('live_orders').set(orders);
+        }
+
+        window.deleteOrder = function(id) {
+            if(confirm('이 주문을 삭제하시겠습니까?')) {
+                orders = orders.filter(o => o.id !== id);
+                db.ref('live_orders').set(orders);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시스템 상세 관리자 설정</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #f0f2f5; color: #333; padding: 15px; }
+        header { text-align: center; margin-bottom: 20px; }
+        h1 { font-size: 1.5rem; color: #1a1a1a; margin-bottom: 5px; }
+        .connection-status { font-size: 0.85rem; color: #2e7d32; background: #e8f5e9; padding: 4px 12px; border-radius: 12px; display: inline-block; font-weight: bold; }
+        
+        .container { display: flex; flex-direction: column; gap: 15px; max-width: 600px; margin: 0 auto; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .card h2 { font-size: 1.1rem; margin-bottom: 15px; color: #007aff; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f0f2f5; padding-bottom: 8px; }
+        
+        .form-group { margin-bottom: 12px; }
+        label { display: block; font-size: 0.85rem; margin-bottom: 6px; font-weight: 600; color: #555; }
+        
+        .input-row { display: flex; gap: 8px; margin-bottom: 8px; }
+        input[type="text"], input[type="number"] { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; }
+        
+        /* 색상 설정 전용 스타일 */
+        .color-picker-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .color-item { display: flex; align-items: center; justify-content: space-between; background: #f8f9fa; padding: 8px 12px; border-radius: 8px; border: 1px solid #eee; }
+        .color-item label { margin: 0; font-size: 0.85rem; font-weight: bold; }
+        input[type="color"] { border: none; width: 36px; height: 36px; border-radius: 6px; cursor: pointer; background: none; }
+
+        .add-btn { background: #34c759; color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .add-btn:active { background: #238636; }
+
+        .item-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; padding: 10px 12px; border-radius: 8px; border: 1px solid #eee; }
+        .item-info { font-size: 0.95rem; font-weight: 600; }
+        .delete-btn { background: #ff3b30; color: white; border: none; padding: 6px 10px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; font-weight: bold; }
+
+        .save-all-btn { width: 100%; background: #007aff; color: white; border: none; padding: 16px; border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 12px rgba(0,122,255,0.3); }
+        .save-all-btn:active { background: #0056b3; }
+
+        .nav-links { display: flex; gap: 10px; margin-top: 10px; }
+        .nav-btn { flex: 1; text-align: center; background: #e4e6eb; color: #333; padding: 10px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: bold; }
+
+        #saveToast {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            background: #34c759; color: white; padding: 12px 24px; border-radius: 25px;
+            font-size: 1rem; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 9999; display: none;
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+</head>
+<body>
+
+    <div id="saveToast">모든 설정이 성공적으로 저장되었습니다! 💾</div>
+
+    <header>
+        <h1>⚙️ 시스템 상세 관리자 설정</h1>
+        <div class="connection-status" id="syncStatus">🔄 클라우드 연결 중...</div>
+    </header>
+
+    <div class="container">
+        <!-- 1. 타이틀 설정 -->
+        <div class="card">
+            <h2>🏪 가게 상호명 및 타이틀 커스텀</h2>
+            <div class="form-group">
+                <label>가게 상호명</label>
+                <input type="text" id="storeNameInput" placeholder="예: 청춘 야시장">
+            </div>
+            <div class="form-group">
+                <label>주문 페이지 메인 제목</label>
+                <input type="text" id="orderTitleInput" placeholder="예: 🍢 간편 주문 접수">
+            </div>
+            <div class="form-group">
+                <label>주방 보드 메인 제목</label>
+                <input type="text" id="kitchenTitleInput" placeholder="예: 🍳 주방 실시간 보드">
+            </div>
+        </div>
+
+        <!-- 2. 버튼 디자인 커스텀 (색상 설정) -->
+        <div class="card">
+            <h2>🎨 버튼 색상 디자인 커스텀</h2>
+            <div class="color-picker-group">
+                <div class="color-item">
+                    <label>기본 버튼 배경</label>
+                    <input type="color" id="btnBgColor" value="#007aff">
+                </div>
+                <div class="color-item">
+                    <label>기본 버튼 글자</label>
+                    <input type="color" id="btnTextColor" value="#ffffff">
+                </div>
+                <div class="color-item">
+                    <label>활성화 버튼 배경</label>
+                    <input type="color" id="activeBtnBgColor" value="#34c759">
+                </div>
+                <div class="color-item">
+                    <label>완료/제출 버튼</label>
+                    <input type="color" id="submitBtnBgColor" value="#007aff">
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. 주문 구분 커스텀 -->
+        <div class="card">
+            <h2>🛍️ 주문 구분 설정 (포장/매장 등)</h2>
+            <div class="input-row">
+                <input type="text" id="newTypeInput" placeholder="구분 입력 (예: 배달)">
+                <button type="button" class="add-btn" onclick="addItem('types')">추가</button>
+            </div>
+            <div class="item-list" id="typesList"></div>
+        </div>
+
+        <!-- 4. 결제 방식 커스텀 -->
+        <div class="card">
+            <h2>💳 결제 수단 설정</h2>
+            <div class="input-row">
+                <input type="text" id="newPayInput" placeholder="결제 수단 입력 (예: 카카오페이)">
+                <button type="button" class="add-btn" onclick="addItem('pays')">추가</button>
+            </div>
+            <div class="item-list" id="paysList"></div>
+        </div>
+
+        <!-- 5. 메뉴 및 세부 옵션 커스텀 -->
+        <div class="card">
+            <h2>🍜 메뉴 및 세부 옵션 관리</h2>
+            <div class="input-row">
+                <input type="text" id="newMenuNameInput" placeholder="메뉴명 (예: 팟타이)" style="flex: 2;">
+                <input type="number" id="newMenuPriceInput" placeholder="가격(원)" style="flex: 1;">
+                <button type="button" class="add-btn" onclick="addMenu()">메뉴 추가</button>
+            </div>
+            <div class="item-list" id="menusList"></div>
+        </div>
+
+        <!-- 저장 및 이동 -->
+        <button type="button" class="save-all-btn" onclick="saveSettingsToCloud()">모든 설정 저장하기 💾</button>
+
+        <div class="nav-links">
+            <a href="order.html" class="nav-btn">📱 주문 페이지 이동</a>
+            <a href="kitchen.html" class="nav-btn">🍳 주방 보드 이동</a>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            databaseURL: "https://night-market-order-8a9ac-default-rtdb.firebaseio.com/"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let settings = {
+            storeName: '청춘 야시장',
+            orderTitle: '🍢 간편 주문 접수',
+            kitchenTitle: '🍳 주방 실시간 보드',
+            theme: {
+                btnBg: '#007aff',
+                btnText: '#ffffff',
+                activeBtnBg: '#34c759',
+                submitBtnBg: '#007aff'
+            },
+            types: ['포장', '매장식사'],
+            pays: ['계좌이체', '현금'],
+            menus: [
+                { name: '팟타이', price: 8000, options: ['기본맛', '매운맛'] },
+                { name: '문어꼬치', price: 5000, options: ['데리야끼', '매콤소스'] }
+            ]
+        };
+
+        db.ref('system_settings').on('value', (snapshot) => {
+            document.getElementById('syncStatus').innerText = '🟢 클라우드 동기화 완료';
+            const data = snapshot.val();
+            if (data) {
+                settings = Object.assign(settings, data);
+            }
+            renderAdminUI();
+        }, () => {
+            document.getElementById('syncStatus').innerText = '🔴 동기화 오류';
+        });
+
+        function renderAdminUI() {
+            document.getElementById('storeNameInput').value = settings.storeName || '';
+            document.getElementById('orderTitleInput').value = settings.orderTitle || '';
+            document.getElementById('kitchenTitleInput').value = settings.kitchenTitle || '';
+
+            if (settings.theme) {
+                document.getElementById('btnBgColor').value = settings.theme.btnBg || '#007aff';
+                document.getElementById('btnTextColor').value = settings.theme.btnText || '#ffffff';
+                document.getElementById('activeBtnBgColor').value = settings.theme.activeBtnBg || '#34c759';
+                document.getElementById('submitBtnBgColor').value = settings.theme.submitBtnBg || '#007aff';
+            }
+
+            // Types
+            const typesContainer = document.getElementById('typesList');
+            typesContainer.innerHTML = '';
+            (settings.types || []).forEach((t, idx) => {
+                typesContainer.innerHTML += `
+                    <div class="item-row">
+                        <span class="item-info">${t}</span>
+                        <button type="button" class="delete-btn" onclick="removeItem('types', ${idx})">삭제</button>
+                    </div>`;
+            });
+
+            // Pays
+            const paysContainer = document.getElementById('paysList');
+            paysContainer.innerHTML = '';
+            (settings.pays || []).forEach((p, idx) => {
+                paysContainer.innerHTML += `
+                    <div class="item-row">
+                        <span class="item-info">${p}</span>
+                        <button type="button" class="delete-btn" onclick="removeItem('pays', ${idx})">삭제</button>
+                    </div>`;
+            });
+
+            // Menus
+            const menusContainer = document.getElementById('menusList');
+            menusContainer.innerHTML = '';
+            (settings.menus || []).forEach((m, idx) => {
+                const optStr = m.options && m.options.length > 0 ? `<br><small style="color:#666;">옵션: ${m.options.join(', ')}</small>` : '';
+                menusContainer.innerHTML += `
+                    <div class="item-row">
+                        <div>
+                            <span class="item-info">${m.name} (${Number(m.price).toLocaleString()}원)</span>
+                            ${optStr}
+                        </div>
+                        <div>
+                            <button type="button" class="add-btn" style="padding:4px 8px; font-size:0.75rem; margin-right:4px;" onclick="addOptionToMenu(${idx})">+ 옵션추가</button>
+                            <button type="button" class="delete-btn" onclick="removeItem('menus', ${idx})">삭제</button>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function addItem(category) {
+            const inputId = category === 'types' ? 'newTypeInput' : 'newPayInput';
+            const val = document.getElementById(inputId).value.trim();
+            if (!val) { alert('내용을 입력해주세요!'); return; }
+            if (!settings[category]) settings[category] = [];
+            settings[category].push(val);
+            document.getElementById(inputId).value = '';
+            renderAdminUI();
+        }
+
+        function addMenu() {
+            const name = document.getElementById('newMenuNameInput').value.trim();
+            const price = parseInt(document.getElementById('newMenuPriceInput').value);
+            if (!name || isNaN(price)) { alert('메뉴 이름과 올바른 가격을 입력해주세요!'); return; }
+            if (!settings.menus) settings.menus = [];
+            settings.menus.push({ name, price, options: [] });
+            document.getElementById('newMenuNameInput').value = '';
+            document.getElementById('newMenuPriceInput').value = '';
+            renderAdminUI();
+        }
+
+        function addOptionToMenu(menuIndex) {
+            const optName = prompt('추가할 세부 옵션명을 입력하세요 (예: 매운맛, 땅콩제거 등):');
+            if (optName && optName.trim()) {
+                if (!settings.menus[menuIndex].options) settings.menus[menuIndex].options = [];
+                settings.menus[menuIndex].options.push(optName.trim());
+                renderAdminUI();
+            }
+        }
+
+        function removeItem(category, index) {
+            settings[category].splice(index, 1);
+            renderAdminUI();
+        }
+
+        function saveSettingsToCloud() {
+            settings.storeName = document.getElementById('storeNameInput').value.trim() || '매장명';
+            settings.orderTitle = document.getElementById('orderTitleInput').value.trim() || '주문 접수';
+            settings.kitchenTitle = document.getElementById('kitchenTitleInput').value.trim() || '주방 보드';
+
+            settings.theme = {
+                btnBg: document.getElementById('btnBgColor').value,
+                btnText: document.getElementById('btnTextColor').value,
+                activeBtnBg: document.getElementById('activeBtnBgColor').value,
+                submitBtnBg: document.getElementById('submitBtnBgColor').value
+            };
+
+            db.ref('system_settings').set(settings).then(() => {
+                const toast = document.getElementById('saveToast');
+                toast.style.display = 'block';
+                setTimeout(() => { toast.style.display = 'none'; }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
