@@ -4,21 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>주문 접수 페이지</title>
-    <style id="customStyle">
+    <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { background-color: #f0f2f5; color: #333; padding: 15px; }
         
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .header-title-box { text-align: left; }
-        .store-badge { font-size: 0.8rem; background: #333; color: white; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: inline-block; margin-bottom: 3px; }
+        .store-badge { font-size: 0.8rem; background: #333; color: white; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: inline-block; margin-bottom: 3px; border: 2px solid #000; }
         h1 { font-size: 1.3rem; color: #1a1a1a; }
         
-        .admin-link-btn { background: #e4e6eb; color: #333; text-decoration: none; font-size: 0.8rem; font-weight: bold; padding: 8px 12px; border-radius: 8px; border: 1px solid #ccc; }
+        .admin-link-btn { background: #e4e6eb; color: #333; text-decoration: none; font-size: 0.8rem; font-weight: bold; padding: 8px 12px; border-radius: 8px; border: 2px solid #000000; }
 
-        .connection-status { font-size: 0.8rem; color: #2e7d32; background: #e8f5e9; padding: 4px 10px; border-radius: 12px; display: inline-block; font-weight: bold; margin-bottom: 10px; }
+        .connection-status { font-size: 0.8rem; color: #2e7d32; background: #e8f5e9; padding: 4px 10px; border-radius: 12px; display: inline-block; font-weight: bold; margin-bottom: 10px; border: 2px solid #000; }
         
         .container { display: flex; flex-direction: column; gap: 15px; max-width: 680px; margin: 0 auto; }
-        .card { background: white; padding: 18px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .card { background: white; padding: 18px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: 2px solid #000; }
         .card h2 { font-size: 1.05rem; margin-bottom: 12px; color: #007aff; }
         
         .form-group { margin-bottom: 15px; }
@@ -26,24 +26,24 @@
         
         .option-group { display: flex; gap: 8px; flex-wrap: wrap; }
         
-        .type-btn-custom { flex: 1; min-width: 100px; padding: 12px; border: 2px solid transparent; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; }
-        .pay-btn-custom { flex: 1; min-width: 100px; padding: 12px; border: 2px solid transparent; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; }
+        .type-btn-custom { flex: 1; min-width: 100px; padding: 12px; border: 2px solid #000000; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; }
+        .pay-btn-custom { flex: 1; min-width: 100px; padding: 12px; border: 2px solid #000000; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; }
 
-        .menu-item-box { border: 1px solid #e9ecef; border-radius: 10px; padding: 12px; margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+        .menu-item-box { border: 2px solid #000000; border-radius: 10px; padding: 12px; margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
         .menu-main-row { display: flex; justify-content: space-between; align-items: center; }
         .qty-controls { display: flex; gap: 5px; }
-        .qty-btn { width: 34px; height: 34px; border: 1px solid #ccc; background: white; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .qty-btn { width: 34px; height: 34px; border: 2px solid #000000; background: white; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
-        .sub-options-box { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; border-top: 1px dashed #ddd; padding-top: 8px; }
-        .sub-opt-btn { font-size: 0.8rem; padding: 6px 10px; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .sub-options-box { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; border-top: 2px dashed #000; padding-top: 8px; }
+        .sub-opt-btn { font-size: 0.8rem; padding: 6px 10px; border: 2px solid #000000; border-radius: 6px; cursor: pointer; font-weight: bold; }
 
-        .submit-btn-custom { width: 100%; border: none; padding: 16px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .submit-btn-custom { width: 100%; border: 2px solid #000000; padding: 16px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
 
         #fullscreenToast {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0, 0, 0, 0.75); display: none; justify-content: center; align-items: center; z-index: 99999;
         }
-        .toast-box { background: #ffffff; padding: 40px 30px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 400px; max-width: 90%; }
+        .toast-box { background: #ffffff; padding: 40px 30px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 400px; max-width: 90%; border: 2px solid #000; }
         .empty-notice { color: #888; font-size: 0.9rem; text-align: center; padding: 20px; }
     </style>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -95,7 +95,7 @@
 
     <script>
         const firebaseConfig = {
-            databaseURL: "https://night-market-order-8a9ac-default-rtdb.firebaseio.com/"
+            databaseURL: "https://noodle-festival-default-rtdb.firebaseio.com/"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
@@ -119,8 +119,7 @@
 
         function applyCustomStyles(st) {
             if (!st) return;
-            const customStyleTag = document.getElementById('customStyle');
-            customStyleTag.innerHTML += `
+            const styleText = `
                 .type-btn-custom { background: ${st.typeBg || '#007aff'}; color: ${st.typeText || '#ffffff'}; }
                 .type-btn-custom.active { background: ${st.typeActiveBg || '#34c759'} !important; color: ${st.typeActiveText || '#ffffff'} !important; transform: scale(1.02); }
                 
@@ -134,10 +133,16 @@
                 
                 .submit-btn-custom { background: ${st.submitBg || '#007aff'}; color: ${st.submitText || '#ffffff'}; font-size: ${st.submitFontSize || 18}px; }
             `;
+            let tag = document.getElementById('injectedStyle');
+            if (!tag) {
+                tag = document.createElement('style');
+                tag.id = 'injectedStyle';
+                document.head.appendChild(tag);
+            }
+            tag.innerHTML = styleText;
         }
 
         function renderOrderForm() {
-            // Types
             const typeContainer = document.getElementById('typeContainer');
             if (systemSettings.types && systemSettings.types.length > 0) {
                 typeContainer.innerHTML = '';
@@ -152,7 +157,6 @@
                 if (!selectedType) selectedType = systemSettings.types[0];
             }
 
-            // Pays
             const payContainer = document.getElementById('payContainer');
             if (systemSettings.pays && systemSettings.pays.length > 0) {
                 payContainer.innerHTML = '';
@@ -167,7 +171,6 @@
                 if (!selectedPay) selectedPay = systemSettings.pays[0];
             }
 
-            // Menus
             const menuContainer = document.getElementById('menuSelectionContainer');
             if (systemSettings.menus && systemSettings.menus.length > 0) {
                 menuContainer.innerHTML = '';
@@ -196,7 +199,7 @@
                             <div class="qty-controls">
                                 <button type="button" class="qty-btn" onclick="changeQty('${m.name}', -1)">-</button>
                                 <span style="width:30px; text-align:center; line-height:34px; font-weight:bold;" id="qty_${m.name}">${orderDetails[m.name].qty}</span>
-                                <button type="button" class="qty-btn" style="background:#ff9500; color:white; border-color:#ff9500;" onclick="changeQty('${m.name}', 1)">+</button>
+                                <button type="button" class="qty-btn" style="background:#ff9500; color:white;" onclick="changeQty('${m.name}', 1)">+</button>
                             </div>
                         </div>
                         ${subOptionsHtml}
@@ -247,236 +250,7 @@
                 payType: selectedPay || '기본',
                 menu: menuParts.join(' + '),
                 qty: totalQty,
-                time: now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
-            };
-
-            db.ref('live_orders').once('value').then((snapshot) => {
-                let orders = snapshot.val() || [];
-                orders.push(newOrder);
-                db.ref('live_orders').set(orders).then(() => {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                    const toast = document.getElementById('fullscreenToast');
-                    toast.style.display = 'flex';
-                    setTimeout(() => {
-                        toast.style.display = 'none';
-                        orderDetails = {};
-                        renderOrderForm();
-                    }, 1500);
-                });
-            });
-        });
-    </script>
-</body>
-</html>
-        .sub-options-box { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; border-top: 1px dashed #ddd; padding-top: 8px; }
-        .sub-opt-btn { font-size: 0.8rem; padding: 6px 10px; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; }
-
-        .submit-btn-custom { width: 100%; border: none; padding: 16px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-
-        #fullscreenToast {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.75); display: none; justify-content: center; align-items: center; z-index: 99999;
-        }
-        .toast-box { background: #ffffff; padding: 40px 30px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 400px; max-width: 90%; }
-        .empty-notice { color: #888; font-size: 0.9rem; text-align: center; padding: 20px; }
-    </style>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-</head>
-<body>
-
-    <div id="fullscreenToast">
-        <div class="toast-box">
-            <div style="font-size: 3.5rem; margin-bottom: 15px;">🎉</div>
-            <div style="font-size: 1.6rem; font-weight: bold; color: #34c759; margin-bottom: 8px;">주문이 완료되었습니다!</div>
-            <div style="font-size: 1.1rem; font-weight: bold; color: #555;">Order Completed!</div>
-        </div>
-    </div>
-
-    <div class="container">
-        <header>
-            <div class="header-title-box">
-                <span class="store-badge" id="displayStoreName"></span>
-                <h1 id="displayOrderTitle"></h1>
-            </div>
-            <a href="admin.html" class="admin-link-btn">⚙️ 관리자 설정</a>
-        </header>
-
-        <div class="connection-status" id="syncStatus">🔄 실시간 동기화 중...</div>
-
-        <div class="card">
-            <h2>📝 주문서 작성</h2>
-            <form id="orderForm">
-                <div class="form-group">
-                    <label>구분 (Order Type)</label>
-                    <div class="option-group" id="typeContainer"><div class="empty-notice">설정된 구분이 없습니다.</div></div>
-                </div>
-
-                <div class="form-group">
-                    <label>결제 방식 (Payment Method)</label>
-                    <div class="option-group" id="payContainer"><div class="empty-notice">설정된 결제 방식이 없습니다.</div></div>
-                </div>
-
-                <div class="form-group">
-                    <label>메뉴 선택 및 세부 옵션</label>
-                    <div id="menuSelectionContainer"><div class="empty-notice">설정된 메뉴가 없습니다.</div></div>
-                </div>
-
-                <button type="submit" id="mainSubmitBtn" class="submit-btn-custom">주문 등록하기 🚀</button>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        const firebaseConfig = {
-            databaseURL: "https://night-market-order-8a9ac-default-rtdb.firebaseio.com/"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        let systemSettings = { storeName: '', orderTitle: '', types: [], pays: [], menus: [], styles: {} };
-        let selectedType = null;
-        let selectedPay = null;
-        let orderDetails = {};
-
-        db.ref('system_settings').on('value', (snapshot) => {
-            document.getElementById('syncStatus').innerText = '🟢 실시간 연동됨';
-            const data = snapshot.val();
-            if (data) {
-                systemSettings = data;
-                applyCustomStyles(systemSettings.styles);
-                document.getElementById('displayStoreName').innerText = systemSettings.storeName || '';
-                document.getElementById('displayOrderTitle').innerText = systemSettings.orderTitle || '주문 접수 페이지';
-                renderOrderForm();
-            }
-        });
-
-        function applyCustomStyles(st) {
-            if (!st) return;
-            const customStyleTag = document.getElementById('customStyle');
-            customStyleTag.innerHTML += `
-                .type-btn-custom { background: ${st.typeBg || '#007aff'}; color: ${st.typeText || '#ffffff'}; }
-                .type-btn-custom.active { border-color: #333 !important; transform: scale(1.02); }
-                .pay-btn-custom { background: ${st.payBg || '#5856d6'}; color: ${st.payText || '#ffffff'}; }
-                .pay-btn-custom.active { border-color: #333 !important; transform: scale(1.02); }
-                .menu-item-box { background: ${st.menuBg || '#ffffff'}; color: ${st.menuText || '#111111'}; font-size: ${st.menuFontSize || 16}px; }
-                .sub-opt-btn { background: ${st.optBg || '#e0e0e0'}; color: #333; }
-                .sub-opt-btn.active { background: ${st.optActiveBg || '#34c759'} !important; color: white !important; }
-                .submit-btn-custom { background: ${st.submitBg || '#007aff'}; color: ${st.submitText || '#ffffff'}; font-size: ${st.submitFontSize || 18}px; }
-            `;
-        }
-
-        function renderOrderForm() {
-            // Types
-            const typeContainer = document.getElementById('typeContainer');
-            if (systemSettings.types && systemSettings.types.length > 0) {
-                typeContainer.innerHTML = '';
-                systemSettings.types.forEach((t) => {
-                    const btn = document.createElement('button');
-                    btn.type = 'button';
-                    btn.className = `type-btn-custom ${selectedType === t ? 'active' : ''}`;
-                    btn.innerText = t;
-                    btn.onclick = () => { selectedType = t; renderOrderForm(); };
-                    typeContainer.appendChild(btn);
-                });
-                if (!selectedType) selectedType = systemSettings.types[0];
-            }
-
-            // Pays
-            const payContainer = document.getElementById('payContainer');
-            if (systemSettings.pays && systemSettings.pays.length > 0) {
-                payContainer.innerHTML = '';
-                systemSettings.pays.forEach((p) => {
-                    const btn = document.createElement('button');
-                    btn.type = 'button';
-                    btn.className = `pay-btn-custom ${selectedPay === p ? 'active' : ''}`;
-                    btn.innerText = p;
-                    btn.onclick = () => { selectedPay = p; renderOrderForm(); };
-                    payContainer.appendChild(btn);
-                });
-                if (!selectedPay) selectedPay = systemSettings.pays[0];
-            }
-
-            // Menus
-            const menuContainer = document.getElementById('menuSelectionContainer');
-            if (systemSettings.menus && systemSettings.menus.length > 0) {
-                menuContainer.innerHTML = '';
-                systemSettings.menus.forEach(m => {
-                    if (!orderDetails[m.name]) orderDetails[m.name] = { qty: 0, selectedOptions: [] };
-                    
-                    const box = document.createElement('div');
-                    box.className = 'menu-item-box';
-                    
-                    let subOptionsHtml = '';
-                    if (m.options && m.options.length > 0) {
-                        subOptionsHtml = `<div class="sub-options-box">`;
-                        m.options.forEach(opt => {
-                            const isSelected = orderDetails[m.name].selectedOptions.includes(opt);
-                            subOptionsHtml += `<button type="button" class="sub-opt-btn ${isSelected ? 'active' : ''}" onclick="toggleSubOption('${m.name}', '${opt}')">${opt}</button>`;
-                        });
-                        subOptionsHtml += `</div>`;
-                    }
-
-                    box.innerHTML = `
-                        <div class="menu-main-row">
-                            <div>
-                                <div style="font-weight:bold;">${m.name}</div>
-                                <div style="font-size:0.85em; opacity:0.8;">${Number(m.price).toLocaleString()}원</div>
-                            </div>
-                            <div class="qty-controls">
-                                <button type="button" class="qty-btn" onclick="changeQty('${m.name}', -1)">-</button>
-                                <span style="width:30px; text-align:center; line-height:34px; font-weight:bold;" id="qty_${m.name}">${orderDetails[m.name].qty}</span>
-                                <button type="button" class="qty-btn" style="background:#ff9500; color:white; border-color:#ff9500;" onclick="changeQty('${m.name}', 1)">+</button>
-                            </div>
-                        </div>
-                        ${subOptionsHtml}
-                    `;
-                    menuContainer.appendChild(box);
-                });
-            }
-        }
-
-        window.toggleSubOption = function(menuName, opt) {
-            let opts = orderDetails[menuName].selectedOptions;
-            if (opts.includes(opt)) {
-                orderDetails[menuName].selectedOptions = opts.filter(o => o !== opt);
-            } else {
-                opts.push(opt);
-            }
-            renderOrderForm();
-        }
-
-        window.changeQty = function(menuName, delta) {
-            let current = orderDetails[menuName].qty;
-            current += delta;
-            if (current < 0) current = 0;
-            if (current > 10) current = 10;
-            orderDetails[menuName].qty = current;
-            document.getElementById(`qty_${menuName}`).innerText = current;
-        }
-
-        document.getElementById('orderForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            let menuParts = [];
-            let totalQty = 0;
-
-            for (let [menu, detail] of Object.entries(orderDetails)) {
-                if (detail.qty > 0) {
-                    let optStr = detail.selectedOptions.length > 0 ? ` [${detail.selectedOptions.join(', ')}]` : '';
-                    menuParts.push(`${menu}${optStr} x ${detail.qty}`);
-                    totalQty += detail.qty;
-                }
-            }
-
-            if (totalQty === 0) { alert('메뉴를 1개 이상 선택해주세요!'); return; }
-
-            const now = new Date();
-            const newOrder = {
-                id: Date.now(),
-                type: selectedType || '기본',
-                payType: selectedPay || '기본',
-                menu: menuParts.join(' + '),
-                qty: totalQty,
+                menuDetails: JSON.parse(JSON.stringify(orderDetails)),
                 time: now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
             };
 
