@@ -11,29 +11,32 @@
         h1 { font-size: 1.5rem; color: #1a1a1a; margin-bottom: 5px; }
         .connection-status { font-size: 0.85rem; color: #2e7d32; background: #e8f5e9; padding: 4px 12px; border-radius: 12px; display: inline-block; font-weight: bold; }
         
-        .container { display: flex; flex-direction: column; gap: 15px; max-width: 600px; margin: 0 auto; }
+        .container { display: flex; flex-direction: column; gap: 15px; max-width: 650px; margin: 0 auto; }
         .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-        .card h2 { font-size: 1.1rem; margin-bottom: 15px; color: #007aff; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f0f2f5; padding-bottom: 8px; }
+        .card h2 { font-size: 1.1rem; margin-bottom: 15px; color: #007aff; border-bottom: 2px solid #f0f2f5; padding-bottom: 8px; }
         
-        .form-group { margin-bottom: 12px; }
-        label { display: block; font-size: 0.85rem; margin-bottom: 6px; font-weight: 600; color: #555; }
+        .form-group { margin-bottom: 12px; display: flex; flex-direction: column; gap: 5px; }
+        label { font-size: 0.85rem; font-weight: 600; color: #555; }
         
-        .input-row { display: flex; gap: 8px; margin-bottom: 8px; }
-        input[type="text"], input[type="number"] { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; }
+        /* 위아래 수직 배치 레이아웃 */
+        .vertical-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+        input[type="text"], input[type="number"] { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; }
         
-        /* 색상 설정 전용 스타일 */
-        .color-picker-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .color-picker-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px; }
         .color-item { display: flex; align-items: center; justify-content: space-between; background: #f8f9fa; padding: 8px 12px; border-radius: 8px; border: 1px solid #eee; }
-        .color-item label { margin: 0; font-size: 0.85rem; font-weight: bold; }
-        input[type="color"] { border: none; width: 36px; height: 36px; border-radius: 6px; cursor: pointer; background: none; }
+        .color-item label { margin: 0; font-size: 0.8rem; font-weight: bold; }
+        input[type="color"] { border: none; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; background: none; }
 
-        .add-btn { background: #34c759; color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .add-btn { background: #34c759; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; }
         .add-btn:active { background: #238636; }
 
-        .item-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
-        .item-row { display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; padding: 10px 12px; border-radius: 8px; border: 1px solid #eee; }
-        .item-info { font-size: 0.95rem; font-weight: 600; }
-        .delete-btn { background: #ff3b30; color: white; border: none; padding: 6px 10px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; font-weight: bold; }
+        .item-list { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .item-row { display: flex; flex-direction: column; gap: 8px; background: #f8f9fa; padding: 12px; border-radius: 8px; border: 1px solid #eee; }
+        .item-row-header { display: flex; justify-content: space-between; align-items: center; }
+        .item-info { font-size: 1rem; font-weight: bold; color: #111; word-break: break-all; }
+        .delete-btn { background: #ff3b30; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; font-weight: bold; align-self: flex-end; }
+
+        .sub-option-tag { display: inline-block; background: #e0e0e0; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; margin: 2px; }
 
         .save-all-btn { width: 100%; background: #007aff; color: white; border: none; padding: 16px; border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 12px rgba(0,122,255,0.3); }
         .save-all-btn:active { background: #0056b3; }
@@ -52,7 +55,7 @@
 </head>
 <body>
 
-    <div id="saveToast">모든 설정이 성공적으로 저장되었습니다! 💾</div>
+    <div id="saveToast">모든 디테일 설정이 성공적으로 저장되었습니다! 💾</div>
 
     <header>
         <h1>⚙️ 시스템 상세 관리자 설정</h1>
@@ -60,78 +63,110 @@
     </header>
 
     <div class="container">
-        <!-- 1. 타이틀 설정 -->
+        <!-- 1. 상호명 및 타이틀 설정 -->
         <div class="card">
-            <h2>🏪 가게 상호명 및 타이틀 커스텀</h2>
+            <h2>🏪 가게 상호명 및 타이틀 설정</h2>
             <div class="form-group">
                 <label>가게 상호명</label>
-                <input type="text" id="storeNameInput" placeholder="예: 청춘 야시장">
+                <input type="text" id="storeNameInput" placeholder="예: 가게명을 입력하세요">
             </div>
             <div class="form-group">
                 <label>주문 페이지 메인 제목</label>
-                <input type="text" id="orderTitleInput" placeholder="예: 🍢 간편 주문 접수">
+                <input type="text" id="orderTitleInput" placeholder="예: 주문 접수 페이지">
             </div>
             <div class="form-group">
                 <label>주방 보드 메인 제목</label>
-                <input type="text" id="kitchenTitleInput" placeholder="예: 🍳 주방 실시간 보드">
+                <input type="text" id="kitchenTitleInput" placeholder="예: 주방 실시간 보드">
             </div>
         </div>
 
-        <!-- 2. 버튼 디자인 커스텀 (색상 설정) -->
+        <!-- 2. 항목별 디테일 디자인 커스텀 (색상 & 글씨 크기) -->
         <div class="card">
-            <h2>🎨 버튼 색상 디자인 커스텀</h2>
-            <div class="color-picker-group">
-                <div class="color-item">
-                    <label>기본 버튼 배경</label>
-                    <input type="color" id="btnBgColor" value="#007aff">
+            <h2>🎨 항목별 스타일 및 디테일 커스텀</h2>
+            
+            <div class="form-group">
+                <label>📌 구분 버튼 디자인 (포장/매장 등)</label>
+                <div class="color-picker-grid">
+                    <div class="color-item"><label>배경색</label><input type="color" id="typeBgColor" value="#007aff"></div>
+                    <div class="color-item"><label>글자색</label><input type="color" id="typeTextColor" value="#ffffff"></div>
                 </div>
-                <div class="color-item">
-                    <label>기본 버튼 글자</label>
-                    <input type="color" id="btnTextColor" value="#ffffff">
+            </div>
+
+            <div class="form-group" style="margin-top: 10px;">
+                <label>💳 결제 수단 버튼 디자인</label>
+                <div class="color-picker-grid">
+                    <div class="color-item"><label>배경색</label><input type="color" id="payBgColor" value="#5856d6"></div>
+                    <div class="color-item"><label>글자색</label><input type="color" id="payTextColor" value="#ffffff"></div>
                 </div>
-                <div class="color-item">
-                    <label>활성화 버튼 배경</label>
-                    <input type="color" id="activeBtnBgColor" value="#34c759">
+            </div>
+
+            <div class="form-group" style="margin-top: 10px;">
+                <label>🍜 메뉴 카드 디자인 및 글자 크기</label>
+                <div class="color-picker-grid">
+                    <div class="color-item"><label>배경색</label><input type="color" id="menuBgColor" value="#ffffff"></div>
+                    <div class="color-item"><label>글자색</label><input type="color" id="menuTextColor" value="#111111"></div>
                 </div>
-                <div class="color-item">
-                    <label>완료/제출 버튼</label>
-                    <input type="color" id="submitBtnBgColor" value="#007aff">
+                <div class="vertical-row" style="margin-top: 5px;">
+                    <label>메뉴 글자 크기 (px)</label>
+                    <input type="number" id="menuFontSize" value="16" placeholder="예: 16">
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 10px;">
+                <label>⚙️ 세부 옵션 버튼 디자인</label>
+                <div class="color-picker-grid">
+                    <div class="color-item"><label>배경색</label><input type="color" id="optBgColor" value="#e0e0e0"></div>
+                    <div class="color-item"><label>선택시 배경색</label><input type="color" id="optActiveBgColor" value="#34c759"></div>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 10px;">
+                <label>🚀 메인 제출 버튼 디자인 및 글자 크기</label>
+                <div class="color-picker-grid">
+                    <div class="color-item"><label>배경색</label><input type="color" id="submitBgColor" value="#007aff"></div>
+                    <div class="color-item"><label>글자색</label><input type="color" id="submitTextColor" value="#ffffff"></div>
+                </div>
+                <div class="vertical-row" style="margin-top: 5px;">
+                    <label>제출 버튼 글자 크기 (px)</label>
+                    <input type="number" id="submitFontSize" value="18" placeholder="예: 18">
                 </div>
             </div>
         </div>
 
         <!-- 3. 주문 구분 커스텀 -->
         <div class="card">
-            <h2>🛍️ 주문 구분 설정 (포장/매장 등)</h2>
-            <div class="input-row">
-                <input type="text" id="newTypeInput" placeholder="구분 입력 (예: 배달)">
-                <button type="button" class="add-btn" onclick="addItem('types')">추가</button>
+            <h2>🛍️ 주문 구분 설정 (포장, 매장 등)</h2>
+            <div class="vertical-row">
+                <input type="text" id="newTypeInput" placeholder="새 구분 입력 (예: 포장)">
+                <button type="button" class="add-btn" onclick="addItem('types')">구분 추가</button>
             </div>
             <div class="item-list" id="typesList"></div>
         </div>
 
-        <!-- 4. 결제 방식 커스텀 -->
+        <!-- 4. 결제 수단 커스텀 -->
         <div class="card">
             <h2>💳 결제 수단 설정</h2>
-            <div class="input-row">
-                <input type="text" id="newPayInput" placeholder="결제 수단 입력 (예: 카카오페이)">
-                <button type="button" class="add-btn" onclick="addItem('pays')">추가</button>
+            <div class="vertical-row">
+                <input type="text" id="newPayInput" placeholder="새 결제 수단 입력 (예: 계좌이체)">
+                <button type="button" class="add-btn" onclick="addItem('pays')">결제 수단 추가</button>
             </div>
             <div class="item-list" id="paysList"></div>
         </div>
 
-        <!-- 5. 메뉴 및 세부 옵션 커스텀 -->
+        <!-- 5. 메뉴 및 세부 옵션 관리 (위아래 수직 구성) -->
         <div class="card">
             <h2>🍜 메뉴 및 세부 옵션 관리</h2>
-            <div class="input-row">
-                <input type="text" id="newMenuNameInput" placeholder="메뉴명 (예: 팟타이)" style="flex: 2;">
-                <input type="number" id="newMenuPriceInput" placeholder="가격(원)" style="flex: 1;">
-                <button type="button" class="add-btn" onclick="addMenu()">메뉴 추가</button>
+            <div class="vertical-row">
+                <label>메뉴 이름</label>
+                <input type="text" id="newMenuNameInput" placeholder="메뉴 이름 입력">
+                <label>메뉴 가격(원)</label>
+                <input type="number" id="newMenuPriceInput" placeholder="가격 입력 (숫자만)">
+                <button type="button" class="add-btn" onclick="addMenu()">메뉴 추가하기</button>
             </div>
             <div class="item-list" id="menusList"></div>
         </div>
 
-        <!-- 저장 및 이동 -->
+        <!-- 저장 및 링크 버튼 -->
         <button type="button" class="save-all-btn" onclick="saveSettingsToCloud()">모든 설정 저장하기 💾</button>
 
         <div class="nav-links">
@@ -147,22 +182,21 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
+        // 기본 설정값을 모두 빈칸/비어있음으로 초기화
         let settings = {
-            storeName: '청춘 야시장',
-            orderTitle: '🍢 간편 주문 접수',
-            kitchenTitle: '🍳 주방 실시간 보드',
-            theme: {
-                btnBg: '#007aff',
-                btnText: '#ffffff',
-                activeBtnBg: '#34c759',
-                submitBtnBg: '#007aff'
+            storeName: '',
+            orderTitle: '',
+            kitchenTitle: '',
+            styles: {
+                typeBg: '#007aff', typeText: '#ffffff',
+                payBg: '#5856d6', payText: '#ffffff',
+                menuBg: '#ffffff', menuText: '#111111', menuFontSize: 16,
+                optBg: '#e0e0e0', optActiveBg: '#34c759',
+                submitBg: '#007aff', submitText: '#ffffff', submitFontSize: 18
             },
-            types: ['포장', '매장식사'],
-            pays: ['계좌이체', '현금'],
-            menus: [
-                { name: '팟타이', price: 8000, options: ['기본맛', '매운맛'] },
-                { name: '문어꼬치', price: 5000, options: ['데리야끼', '매콤소스'] }
-            ]
+            types: [],
+            pays: [],
+            menus: []
         };
 
         db.ref('system_settings').on('value', (snapshot) => {
@@ -181,11 +215,19 @@
             document.getElementById('orderTitleInput').value = settings.orderTitle || '';
             document.getElementById('kitchenTitleInput').value = settings.kitchenTitle || '';
 
-            if (settings.theme) {
-                document.getElementById('btnBgColor').value = settings.theme.btnBg || '#007aff';
-                document.getElementById('btnTextColor').value = settings.theme.btnText || '#ffffff';
-                document.getElementById('activeBtnBgColor').value = settings.theme.activeBtnBg || '#34c759';
-                document.getElementById('submitBtnBgColor').value = settings.theme.submitBtnBg || '#007aff';
+            if (settings.styles) {
+                document.getElementById('typeBgColor').value = settings.styles.typeBg || '#007aff';
+                document.getElementById('typeTextColor').value = settings.styles.typeText || '#ffffff';
+                document.getElementById('payBgColor').value = settings.styles.payBg || '#5856d6';
+                document.getElementById('payTextColor').value = settings.styles.payText || '#ffffff';
+                document.getElementById('menuBgColor').value = settings.styles.menuBg || '#ffffff';
+                document.getElementById('menuTextColor').value = settings.styles.menuText || '#111111';
+                document.getElementById('menuFontSize').value = settings.styles.menuFontSize || 16;
+                document.getElementById('optBgColor').value = settings.styles.optBg || '#e0e0e0';
+                document.getElementById('optActiveBgColor').value = settings.styles.optActiveBg || '#34c759';
+                document.getElementById('submitBgColor').value = settings.styles.submitBg || '#007aff';
+                document.getElementById('submitTextColor').value = settings.styles.submitText || '#ffffff';
+                document.getElementById('submitFontSize').value = settings.styles.submitFontSize || 18;
             }
 
             // Types
@@ -194,8 +236,10 @@
             (settings.types || []).forEach((t, idx) => {
                 typesContainer.innerHTML += `
                     <div class="item-row">
-                        <span class="item-info">${t}</span>
-                        <button type="button" class="delete-btn" onclick="removeItem('types', ${idx})">삭제</button>
+                        <div class="item-row-header">
+                            <span class="item-info">${t}</span>
+                            <button type="button" class="delete-btn" onclick="removeItem('types', ${idx})">삭제</button>
+                        </div>
                     </div>`;
             });
 
@@ -205,8 +249,10 @@
             (settings.pays || []).forEach((p, idx) => {
                 paysContainer.innerHTML += `
                     <div class="item-row">
-                        <span class="item-info">${p}</span>
-                        <button type="button" class="delete-btn" onclick="removeItem('pays', ${idx})">삭제</button>
+                        <div class="item-row-header">
+                            <span class="item-info">${p}</span>
+                            <button type="button" class="delete-btn" onclick="removeItem('pays', ${idx})">삭제</button>
+                        </div>
                     </div>`;
             });
 
@@ -214,15 +260,24 @@
             const menusContainer = document.getElementById('menusList');
             menusContainer.innerHTML = '';
             (settings.menus || []).forEach((m, idx) => {
-                const optStr = m.options && m.options.length > 0 ? `<br><small style="color:#666;">옵션: ${m.options.join(', ')}</small>` : '';
+                let optionsHtml = '';
+                if (m.options && m.options.length > 0) {
+                    optionsHtml = '<div style="margin-top:6px;">';
+                    m.options.forEach((opt, optIdx) => {
+                        optionsHtml += `<span class="sub-option-tag">${opt} <b style="color:red; cursor:pointer;" onclick="removeOptionFromMenu(${idx}, ${optIdx})">×</b></span>`;
+                    });
+                    optionsHtml += '</div>';
+                }
+
                 menusContainer.innerHTML += `
                     <div class="item-row">
-                        <div>
-                            <span class="item-info">${m.name} (${Number(m.price).toLocaleString()}원)</span>
-                            ${optStr}
+                        <div class="item-row-header">
+                            <span class="item-info">${m.name}</span>
+                            <span style="font-weight:bold; color:#007aff;">${Number(m.price).toLocaleString()}원</span>
                         </div>
-                        <div>
-                            <button type="button" class="add-btn" style="padding:4px 8px; font-size:0.75rem; margin-right:4px;" onclick="addOptionToMenu(${idx})">+ 옵션추가</button>
+                        ${optionsHtml}
+                        <div style="display:flex; gap:6px; margin-top:8px;">
+                            <button type="button" class="add-btn" style="padding:6px 10px; font-size:0.8rem; flex:1;" onclick="addOptionToMenu(${idx})">+ 세부 옵션 추가</button>
                             <button type="button" class="delete-btn" onclick="removeItem('menus', ${idx})">삭제</button>
                         </div>
                     </div>`;
@@ -251,12 +306,17 @@
         }
 
         function addOptionToMenu(menuIndex) {
-            const optName = prompt('추가할 세부 옵션명을 입력하세요 (예: 매운맛, 땅콩제거 등):');
+            const optName = prompt('추가할 세부 옵션명을 입력하세요 (예: 매운맛, 땅콩제거, 곱빼기 등):');
             if (optName && optName.trim()) {
                 if (!settings.menus[menuIndex].options) settings.menus[menuIndex].options = [];
                 settings.menus[menuIndex].options.push(optName.trim());
                 renderAdminUI();
             }
+        }
+
+        function removeOptionFromMenu(menuIndex, optIndex) {
+            settings.menus[menuIndex].options.splice(optIndex, 1);
+            renderAdminUI();
         }
 
         function removeItem(category, index) {
@@ -265,15 +325,23 @@
         }
 
         function saveSettingsToCloud() {
-            settings.storeName = document.getElementById('storeNameInput').value.trim() || '매장명';
-            settings.orderTitle = document.getElementById('orderTitleInput').value.trim() || '주문 접수';
-            settings.kitchenTitle = document.getElementById('kitchenTitleInput').value.trim() || '주방 보드';
+            settings.storeName = document.getElementById('storeNameInput').value.trim();
+            settings.orderTitle = document.getElementById('orderTitleInput').value.trim();
+            settings.kitchenTitle = document.getElementById('kitchenTitleInput').value.trim();
 
-            settings.theme = {
-                btnBg: document.getElementById('btnBgColor').value,
-                btnText: document.getElementById('btnTextColor').value,
-                activeBtnBg: document.getElementById('activeBtnBgColor').value,
-                submitBtnBg: document.getElementById('submitBtnBgColor').value
+            settings.styles = {
+                typeBg: document.getElementById('typeBgColor').value,
+                typeText: document.getElementById('typeTextColor').value,
+                payBg: document.getElementById('payBgColor').value,
+                payText: document.getElementById('payTextColor').value,
+                menuBg: document.getElementById('menuBgColor').value,
+                menuText: document.getElementById('menuTextColor').value,
+                menuFontSize: parseInt(document.getElementById('menuFontSize').value) || 16,
+                optBg: document.getElementById('optBgColor').value,
+                optActiveBg: document.getElementById('optActiveBgColor').value,
+                submitBg: document.getElementById('submitBgColor').value,
+                submitText: document.getElementById('submitTextColor').value,
+                submitFontSize: parseInt(document.getElementById('submitFontSize').value) || 18
             };
 
             db.ref('system_settings').set(settings).then(() => {
