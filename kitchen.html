@@ -10,29 +10,47 @@
         
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .header-title-box { text-align: left; }
-        .store-badge { font-size: 0.8rem; background: #333; color: white; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: inline-block; margin-bottom: 3px; }
+        .store-badge { font-size: 0.8rem; background: #333; color: white; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: inline-block; margin-bottom: 3px; border: 2px solid #000; }
         h1 { font-size: 1.3rem; color: #1a1a1a; }
 
-        .admin-link-btn { background: #e4e6eb; color: #333; text-decoration: none; font-size: 0.8rem; font-weight: bold; padding: 8px 12px; border-radius: 8px; border: 1px solid #ccc; }
+        .admin-link-btn { background: #e4e6eb; color: #333; text-decoration: none; font-size: 0.8rem; font-weight: bold; padding: 8px 12px; border-radius: 8px; border: 2px solid #000000; }
 
-        .connection-status { font-size: 0.8rem; color: #2e7d32; background: #e8f5e9; padding: 4px 10px; border-radius: 12px; display: inline-block; font-weight: bold; margin-bottom: 10px; }
+        .connection-status { font-size: 0.8rem; color: #2e7d32; background: #e8f5e9; padding: 4px 10px; border-radius: 12px; display: inline-block; font-weight: bold; margin-bottom: 10px; border: 2px solid #000; }
         
         .container { display: flex; flex-direction: column; gap: 15px; max-width: 680px; margin: 0 auto; }
-        .card { background: white; padding: 18px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        
+        .summary-card { background: #1c1c1e; color: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 2px solid #000; }
+        .summary-title { font-size: 0.95rem; font-weight: bold; margin-bottom: 10px; color: #ff9f0a; display: flex; justify-content: space-between; align-items: center; }
+        .summary-title-btns { display: flex; gap: 6px; }
+        .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .summary-box { background: #2c2c2e; padding: 10px; border-radius: 8px; text-align: center; border: 2px solid #444; }
+        .summary-box h3 { font-size: 0.8rem; color: #98989f; margin-bottom: 4px; }
+        .summary-box .stat-val { font-size: 0.95rem; font-weight: bold; color: #fff; }
+
+        .card { background: white; padding: 18px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: 2px solid #000; }
         .card h2 { font-size: 1.05rem; margin-bottom: 12px; color: #007aff; display: flex; justify-content: space-between; align-items: center; }
 
         .order-items { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
-        .order-card { background: #fff; border-left: 8px solid #007aff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.08); display: flex; flex-direction: column; gap: 10px; }
+        .order-card { background: #fff; border-left: 8px solid #007aff; border: 2px solid #000; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.08); display: flex; flex-direction: column; gap: 10px; }
         
-        .badge { font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; font-weight: bold; color: white; display: inline-block; background: #5856d6; }
+        .badge { font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; font-weight: bold; color: white; display: inline-block; background: #5856d6; border: 2px solid #000; }
         .menu-name { font-size: 1.25rem; font-weight: bold; color: #111; line-height: 1.4; word-break: break-all; }
         .time { font-size: 0.75rem; color: #888; }
 
         .btn-group { display: flex; gap: 8px; }
-        .action-btn { flex: 1; padding: 12px; border-radius: 8px; font-size: 1rem; font-weight: bold; border: none; cursor: pointer; color: white; }
+        .action-btn { flex: 1; padding: 12px; border-radius: 8px; font-size: 1rem; font-weight: bold; border: 2px solid #000000; cursor: pointer; color: white; }
         .done-btn { background: #34c759; flex: 2; }
         .delete-btn { background: #ff3b30; flex: 1; }
         .empty-msg { text-align: center; color: #888; padding: 30px; font-size: 0.9rem; }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 15px; }
+        .modal-content { background: white; width: 100%; max-width: 500px; border-radius: 14px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); max-height: 85vh; display: flex; flex-direction: column; border: 2px solid #000; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .modal-body { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 12px; }
+        .stat-section-title { font-size: 0.95rem; font-weight: bold; color: #007aff; margin-top: 5px; }
+        .stat-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        .stat-table th, .stat-table td { border: 2px solid #000; padding: 8px; text-align: center; }
+        .stat-table th { background: #f8f9fa; color: #333; }
     </style>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -50,10 +68,26 @@
 
         <div class="connection-status" id="syncStatus">🔄 실시간 동기화 중...</div>
 
+        <div class="summary-card">
+            <div class="summary-title">
+                <span>📊 금일 누적 조리완료 통계</span>
+                <div class="summary-title-btns">
+                    <button onclick="openStatsModal()" style="background:#007aff; border:2px solid #fff; color:white; font-size:0.75rem; font-weight:bold; padding:4px 8px; border-radius:4px; cursor:pointer;">📊 통계보기</button>
+                    <button onclick="resetStats()" style="background:transparent; border:2px solid #aaa; color:#aaa; font-size:0.75rem; padding:4px 6px; border-radius:4px; cursor:pointer;">통계초기화</button>
+                </div>
+            </div>
+            <div class="summary-grid" id="summaryGridContainer">
+                <div class="summary-box">
+                    <h3>📦 판매 내역 없음</h3>
+                    <div class="stat-val">0건 완료</div>
+                </div>
+            </div>
+        </div>
+
         <div class="card">
             <h2>
                 <span>🔥 실시간 주문 현황</span>
-                <span id="orderCountBadge" style="font-size:0.8rem; background:#007aff; color:white; padding:2px 8px; border-radius:10px;">0개</span>
+                <span id="orderCountBadge" style="font-size:0.8rem; background:#007aff; color:white; padding:2px 8px; border-radius:10px; border:2px solid #000;">0개</span>
             </h2>
             <div id="orderListContainer" class="order-items">
                 <div class="empty-msg">등록된 주문이 없습니다.</div>
@@ -61,14 +95,28 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="statsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📈 금일 조리 완료 상세 통계</h3>
+                <button onclick="closeStatsModal()" style="background:#e0e0e0; border:2px solid #000; font-weight:bold; padding:4px 10px; border-radius:6px; cursor:pointer;">닫기 ✖</button>
+            </div>
+            <div class="modal-body" id="modalStatsBody"></div>
+        </div>
+    </div>
+
     <script>
         const firebaseConfig = {
-            databaseURL: "https://night-market-order-8a9ac-default-rtdb.firebaseio.com/"
+            databaseURL: "https://noodle-festival-default-rtdb.firebaseio.com/"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
         let orders = [];
+        let stats = {
+            salesCounts: {},
+            history: []
+        };
 
         db.ref('system_settings').on('value', (snapshot) => {
             const data = snapshot.val();
@@ -78,6 +126,16 @@
             }
         });
 
+        db.ref('noodle_stats').on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                stats = data;
+            } else {
+                stats = { salesCounts: {}, history: [] };
+            }
+            renderStatsSummary();
+        });
+
         db.ref('live_orders').on('value', (snapshot) => {
             document.getElementById('syncStatus').innerText = '🟢 실시간 연동됨';
             orders = snapshot.val() || [];
@@ -85,6 +143,92 @@
         }, () => {
             document.getElementById('syncStatus').innerText = '🔴 동기화 오류';
         });
+
+        function syncStatsToCloud() {
+            db.ref('noodle_stats').set(stats);
+        }
+
+        window.completeOrder = function(id) {
+            const order = orders.find(o => o.id == id);
+            if (!order) return;
+
+            if (!stats.salesCounts) stats.salesCounts = {};
+            if (!stats.salesCounts[order.type]) stats.salesCounts[order.type] = {};
+
+            if (order.menuDetails) {
+                for (let [m, info] of Object.entries(order.menuDetails)) {
+                    if (info.qty > 0) {
+                        stats.salesCounts[order.type][m] = (stats.salesCounts[order.type][m] || 0) + info.qty;
+                    }
+                }
+            } else {
+                order.menu.split(' + ').forEach(part => {
+                    const cleanName = part.split(' x ')[0].trim();
+                    stats.salesCounts[order.type][cleanName] = (stats.salesCounts[order.type][cleanName] || 0) + order.qty;
+                });
+            }
+
+            if (!stats.history) stats.history = [];
+            stats.history.push({
+                time: order.time,
+                type: order.type,
+                payType: order.payType,
+                menu: order.menu,
+                qty: order.qty
+            });
+
+            orders = orders.filter(o => o.id !== id);
+            
+            db.ref('live_orders').set(orders);
+            syncStatsToCloud();
+        }
+
+        window.deleteOrder = function(id) {
+            if(confirm('이 주문을 삭제하시겠습니까?')) {
+                orders = orders.filter(o => o.id !== id);
+                db.ref('live_orders').set(orders);
+            }
+        }
+
+        window.resetStats = function() {
+            if(confirm('금일 누적 조리 통계를 초기화하시겠습니까?')) {
+                stats = { salesCounts: {}, history: [] };
+                syncStatsToCloud();
+            }
+        }
+
+        function renderStatsSummary() {
+            const container = document.getElementById('summaryGridContainer');
+            container.innerHTML = '';
+
+            let hasData = false;
+            for (let [type, menus] of Object.entries(stats.salesCounts || {})) {
+                let textArr = [];
+                for (let [menu, count] of Object.entries(menus)) {
+                    if (count > 0) {
+                        textArr.push(`${menu} ${count}개`);
+                        hasData = true;
+                    }
+                }
+                if (textArr.length > 0) {
+                    container.innerHTML += `
+                        <div class="summary-box">
+                            <h3>🛍️ ${type} 누적</h3>
+                            <div class="stat-val">${textArr.join(' / ')}</div>
+                        </div>
+                    `;
+                }
+            }
+
+            if (!hasData) {
+                container.innerHTML = `
+                    <div class="summary-box" style="grid-column: span 2;">
+                        <h3>📊 조리 완료된 판매 내역이 없습니다</h3>
+                        <div class="stat-val">0건 완료</div>
+                    </div>
+                `;
+            }
+        }
 
         function renderKitchenOrders() {
             const container = document.getElementById('orderListContainer');
@@ -117,16 +261,38 @@
             });
         }
 
-        window.completeOrder = function(id) {
-            orders = orders.filter(o => o.id !== id);
-            db.ref('live_orders').set(orders);
+        window.openStatsModal = function() {
+            const modalBody = document.getElementById('modalStatsBody');
+            modalBody.innerHTML = '';
+
+            let historyHtml = `
+                <div class="stat-section-title">📜 조리 완료 상세 내역 (${(stats.history || []).length}건)</div>
+                <table class="stat-table" style="margin-top:6px;">
+                    <tr><th>시간</th><th>구분</th><th>결제</th><th>메뉴 및 옵션</th></tr>
+            `;
+
+            if (!stats.history || stats.history.length === 0) {
+                historyHtml += `<tr><td colspan="4" style="color:#888; padding:15px;">완료된 내역이 없습니다.</td></tr>`;
+            } else {
+                [...stats.history].reverse().forEach(h => {
+                    historyHtml += `
+                        <tr>
+                            <td>${h.time}</td>
+                            <td>${h.type}</td>
+                            <td>${h.payType}</td>
+                            <td style="text-align:left;"><b>${h.menu}</b></td>
+                        </tr>
+                    `;
+                });
+            }
+            historyHtml += `</table>`;
+            modalBody.innerHTML = historyHtml;
+
+            document.getElementById('statsModal').style.display = 'flex';
         }
 
-        window.deleteOrder = function(id) {
-            if(confirm('이 주문을 삭제하시겠습니까?')) {
-                orders = orders.filter(o => o.id !== id);
-                db.ref('live_orders').set(orders);
-            }
+        window.closeStatsModal = function() {
+            document.getElementById('statsModal').style.display = 'none';
         }
     </script>
 </body>
