@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>주문 접수 페이지</title>
-    <style id="dynamicStyle">
+    <style id="customStyle">
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { background-color: #f0f2f5; color: #333; padding: 15px; }
         
@@ -17,33 +17,35 @@
 
         .connection-status { font-size: 0.8rem; color: #2e7d32; background: #e8f5e9; padding: 4px 10px; border-radius: 12px; display: inline-block; font-weight: bold; margin-bottom: 10px; }
         
-        .container { display: flex; flex-direction: column; gap: 15px; max-width: 600px; margin: 0 auto; }
+        .container { display: flex; flex-direction: column; gap: 15px; max-width: 650px; margin: 0 auto; }
         .card { background: white; padding: 18px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
         .card h2 { font-size: 1.05rem; margin-bottom: 12px; color: #007aff; }
         
         .form-group { margin-bottom: 15px; }
-        label { display: block; font-size: 0.85rem; margin-bottom: 5px; font-weight: 600; color: #555; }
+        label { display: block; font-size: 0.85rem; margin-bottom: 6px; font-weight: 600; color: #555; }
         
-        .option-group { display: flex; gap: 6px; flex-wrap: wrap; }
-        .option-btn { flex: 1; min-width: 90px; padding: 12px 8px; border: 2px solid #ddd; background: #007aff; color: #ffffff; border-radius: 8px; font-size: 0.9rem; font-weight: bold; cursor: pointer; text-align: center; }
-        .option-btn.active { background: #34c759 !important; border-color: #34c759 !important; }
+        .option-group { display: flex; gap: 8px; flex-wrap: wrap; }
+        
+        /* 커스텀 버튼 스타일 기본값 */
+        .type-btn-custom { flex: 1; padding: 12px; border: 2px solid transparent; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; }
+        .pay-btn-custom { flex: 1; padding: 12px; border: 2px solid transparent; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; }
 
-        .menu-item-box { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 10px; padding: 12px; margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+        .menu-item-box { border: 1px solid #e9ecef; border-radius: 10px; padding: 12px; margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
         .menu-main-row { display: flex; justify-content: space-between; align-items: center; }
         .qty-controls { display: flex; gap: 5px; }
-        .qty-btn { width: 32px; height: 32px; border: 1px solid #ccc; background: white; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .qty-btn { width: 34px; height: 34px; border: 1px solid #ccc; background: white; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
-        .sub-options-box { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 5px; border-top: 1px dashed #ddd; padding-top: 8px; }
-        .sub-opt-btn { font-size: 0.75rem; padding: 4px 8px; border: 1px solid #ccc; background: #fff; border-radius: 4px; cursor: pointer; }
-        .sub-opt-btn.active { background: #5856d6; color: white; border-color: #5856d6; }
+        .sub-options-box { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; border-top: 1px dashed #ddd; padding-top: 8px; }
+        .sub-opt-btn { font-size: 0.8rem; padding: 6px 10px; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; }
 
-        .submit-btn { width: 100%; background: #007aff; color: white; border: none; padding: 16px; border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .submit-btn-custom { width: 100%; border: none; padding: 16px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
 
         #fullscreenToast {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0, 0, 0, 0.75); display: none; justify-content: center; align-items: center; z-index: 99999;
         }
         .toast-box { background: #ffffff; padding: 40px 30px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 400px; max-width: 90%; }
+        .empty-notice { color: #888; font-size: 0.9rem; text-align: center; padding: 20px; }
     </style>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -61,8 +63,8 @@
     <div class="container">
         <header>
             <div class="header-title-box">
-                <span class="store-badge" id="displayStoreName">매장명</span>
-                <h1 id="displayOrderTitle">주문 접수 페이지</h1>
+                <span class="store-badge" id="displayStoreName"></span>
+                <h1 id="displayOrderTitle"></h1>
             </div>
             <a href="admin.html" class="admin-link-btn">⚙️ 관리자 설정</a>
         </header>
@@ -74,20 +76,20 @@
             <form id="orderForm">
                 <div class="form-group">
                     <label>구분 (Order Type)</label>
-                    <div class="option-group" id="typeContainer"></div>
+                    <div class="option-group" id="typeContainer"><div class="empty-notice">설정된 구분이 없습니다.</div></div>
                 </div>
 
                 <div class="form-group">
                     <label>결제 방식 (Payment Method)</label>
-                    <div class="option-group" id="payContainer"></div>
+                    <div class="option-group" id="payContainer"><div class="empty-notice">설정된 결제 방식이 없습니다.</div></div>
                 </div>
 
                 <div class="form-group">
                     <label>메뉴 선택 및 세부 옵션</label>
-                    <div id="menuSelectionContainer"></div>
+                    <div id="menuSelectionContainer"><div class="empty-notice">설정된 메뉴가 없습니다.</div></div>
                 </div>
 
-                <button type="submit" id="mainSubmitBtn" class="submit-btn">주문 등록하기 🚀</button>
+                <button type="submit" id="mainSubmitBtn" class="submit-btn-custom">주문 등록하기 🚀</button>
             </form>
         </div>
     </div>
@@ -99,95 +101,106 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let systemSettings = { storeName: '', orderTitle: '', types: [], pays: [], menus: [], theme: {} };
+        let systemSettings = { storeName: '', orderTitle: '', types: [], pays: [], menus: [], styles: {} };
         let selectedType = null;
         let selectedPay = null;
-        let orderDetails = {}; // { '팟타이': { qty: 1, selectedOptions: ['매운맛'] } }
+        let orderDetails = {};
 
         db.ref('system_settings').on('value', (snapshot) => {
             document.getElementById('syncStatus').innerText = '🟢 실시간 연동됨';
             const data = snapshot.val();
             if (data) {
                 systemSettings = data;
-                applyTheme(systemSettings.theme);
-                document.getElementById('displayStoreName').innerText = systemSettings.storeName || '매장명';
-                document.getElementById('displayOrderTitle').innerText = systemSettings.orderTitle || '주문 접수';
+                applyCustomStyles(systemSettings.styles);
+                document.getElementById('displayStoreName').innerText = systemSettings.storeName || '';
+                document.getElementById('displayOrderTitle').innerText = systemSettings.orderTitle || '주문 접수 페이지';
                 renderOrderForm();
             }
         });
 
-        function applyTheme(theme) {
-            if (!theme) return;
-            const styleTag = document.getElementById('dynamicStyle');
-            styleTag.innerHTML += `
-                .option-btn { background: ${theme.btnBg} !important; color: ${theme.btnText} !important; }
-                .option-btn.active { background: ${theme.activeBtnBg} !important; border-color: ${theme.activeBtnBg} !important; }
-                .submit-btn { background: ${theme.submitBtnBg} !important; }
+        function applyCustomStyles(st) {
+            if (!st) return;
+            const customStyleTag = document.getElementById('customStyle');
+            customStyleTag.innerHTML += `
+                .type-btn-custom { background: ${st.typeBg || '#007aff'}; color: ${st.typeText || '#ffffff'}; }
+                .type-btn-custom.active { border-color: #333 !important; transform: scale(1.02); }
+                .pay-btn-custom { background: ${st.payBg || '#5856d6'}; color: ${st.payText || '#ffffff'}; }
+                .pay-btn-custom.active { border-color: #333 !important; transform: scale(1.02); }
+                .menu-item-box { background: ${st.menuBg || '#ffffff'}; color: ${st.menuText || '#111111'}; font-size: ${st.menuFontSize || 16}px; }
+                .sub-opt-btn { background: ${st.optBg || '#e0e0e0'}; color: #333; }
+                .sub-opt-btn.active { background: ${st.optActiveBg || '#34c759'} !important; color: white !important; }
+                .submit-btn-custom { background: ${st.submitBg || '#007aff'}; color: ${st.submitText || '#ffffff'}; font-size: ${st.submitFontSize || 18}px; }
             `;
         }
 
         function renderOrderForm() {
             // Types
             const typeContainer = document.getElementById('typeContainer');
-            typeContainer.innerHTML = '';
-            (systemSettings.types || []).forEach((t) => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = `option-btn ${selectedType === t ? 'active' : ''}`;
-                btn.innerText = t;
-                btn.onclick = () => { selectedType = t; renderOrderForm(); };
-                typeContainer.appendChild(btn);
-            });
-            if (!selectedType && systemSettings.types && systemSettings.types.length > 0) selectedType = systemSettings.types[0];
+            if (systemSettings.types && systemSettings.types.length > 0) {
+                typeContainer.innerHTML = '';
+                systemSettings.types.forEach((t) => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = `type-btn-custom ${selectedType === t ? 'active' : ''}`;
+                    btn.innerText = t;
+                    btn.onclick = () => { selectedType = t; renderOrderForm(); };
+                    typeContainer.appendChild(btn);
+                });
+                if (!selectedType) selectedType = systemSettings.types[0];
+            }
 
             // Pays
             const payContainer = document.getElementById('payContainer');
-            payContainer.innerHTML = '';
-            (systemSettings.pays || []).forEach((p) => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = `option-btn ${selectedPay === p ? 'active' : ''}`;
-                btn.innerText = p;
-                btn.onclick = () => { selectedPay = p; renderOrderForm(); };
-                payContainer.appendChild(btn);
-            });
-            if (!selectedPay && systemSettings.pays && systemSettings.pays.length > 0) selectedPay = systemSettings.pays[0];
+            if (systemSettings.pays && systemSettings.pays.length > 0) {
+                payContainer.innerHTML = '';
+                systemSettings.pays.forEach((p) => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = `pay-btn-custom ${selectedPay === p ? 'active' : ''}`;
+                    btn.innerText = p;
+                    btn.onclick = () => { selectedPay = p; renderOrderForm(); };
+                    payContainer.appendChild(btn);
+                });
+                if (!selectedPay) selectedPay = systemSettings.pays[0];
+            }
 
             // Menus
             const menuContainer = document.getElementById('menuSelectionContainer');
-            menuContainer.innerHTML = '';
-            (systemSettings.menus || []).forEach(m => {
-                if (!orderDetails[m.name]) orderDetails[m.name] = { qty: 0, selectedOptions: [] };
-                
-                const box = document.createElement('div');
-                box.className = 'menu-item-box';
-                
-                let subOptionsHtml = '';
-                if (m.options && m.options.length > 0) {
-                    subOptionsHtml = `<div class="sub-options-box">`;
-                    m.options.forEach(opt => {
-                        const isSelected = orderDetails[m.name].selectedOptions.includes(opt);
-                        subOptionsHtml += `<button type="button" class="sub-opt-btn ${isSelected ? 'active' : ''}" onclick="toggleSubOption('${m.name}', '${opt}')">${opt}</button>`;
-                    });
-                    subOptionsHtml += `</div>`;
-                }
+            if (systemSettings.menus && systemSettings.menus.length > 0) {
+                menuContainer.innerHTML = '';
+                systemSettings.menus.forEach(m => {
+                    if (!orderDetails[m.name]) orderDetails[m.name] = { qty: 0, selectedOptions: [] };
+                    
+                    const box = document.createElement('div');
+                    box.className = 'menu-item-box';
+                    
+                    let subOptionsHtml = '';
+                    if (m.options && m.options.length > 0) {
+                        subOptionsHtml = `<div class="sub-options-box">`;
+                        m.options.forEach(opt => {
+                            const isSelected = orderDetails[m.name].selectedOptions.includes(opt);
+                            subOptionsHtml += `<button type="button" class="sub-opt-btn ${isSelected ? 'active' : ''}" onclick="toggleSubOption('${m.name}', '${opt}')">${opt}</button>`;
+                        });
+                        subOptionsHtml += `</div>`;
+                    }
 
-                box.innerHTML = `
-                    <div class="menu-main-row">
-                        <div>
-                            <div style="font-weight:bold; font-size:1rem;">${m.name}</div>
-                            <div style="font-size:0.8rem; color:#666;">${Number(m.price).toLocaleString()}원</div>
+                    box.innerHTML = `
+                        <div class="menu-main-row">
+                            <div>
+                                <div style="font-weight:bold;">${m.name}</div>
+                                <div style="font-size:0.85em; opacity:0.8;">${Number(m.price).toLocaleString()}원</div>
+                            </div>
+                            <div class="qty-controls">
+                                <button type="button" class="qty-btn" onclick="changeQty('${m.name}', -1)">-</button>
+                                <span style="width:30px; text-align:center; line-height:34px; font-weight:bold;" id="qty_${m.name}">${orderDetails[m.name].qty}</span>
+                                <button type="button" class="qty-btn" style="background:#ff9500; color:white; border-color:#ff9500;" onclick="changeQty('${m.name}', 1)">+</button>
+                            </div>
                         </div>
-                        <div class="qty-controls">
-                            <button type="button" class="qty-btn" onclick="changeQty('${m.name}', -1)">-</button>
-                            <span style="width:30px; text-align:center; line-height:32px; font-weight:bold;" id="qty_${m.name}">${orderDetails[m.name].qty}</span>
-                            <button type="button" class="qty-btn" style="background:#ff9500; color:white; border-color:#ff9500;" onclick="changeQty('${m.name}', 1)">+</button>
-                        </div>
-                    </div>
-                    ${subOptionsHtml}
-                `;
-                menuContainer.appendChild(box);
-            });
+                        ${subOptionsHtml}
+                    `;
+                    menuContainer.appendChild(box);
+                });
+            }
         }
 
         window.toggleSubOption = function(menuName, opt) {
@@ -227,8 +240,8 @@
             const now = new Date();
             const newOrder = {
                 id: Date.now(),
-                type: selectedType,
-                payType: selectedPay,
+                type: selectedType || '기본',
+                payType: selectedPay || '기본',
                 menu: menuParts.join(' + '),
                 qty: totalQty,
                 time: now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
