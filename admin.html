@@ -11,21 +11,25 @@
         h1 { font-size: 1.5rem; color: #1a1a1a; margin-bottom: 5px; }
         .connection-status { font-size: 0.85rem; color: #2e7d32; background: #e8f5e9; padding: 4px 12px; border-radius: 12px; display: inline-block; font-weight: bold; }
         
-        .container { display: flex; flex-direction: column; gap: 15px; max-width: 650px; margin: 0 auto; }
+        .container { display: flex; flex-direction: column; gap: 15px; max-width: 680px; margin: 0 auto; }
         .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
         .card h2 { font-size: 1.1rem; margin-bottom: 15px; color: #007aff; border-bottom: 2px solid #f0f2f5; padding-bottom: 8px; }
         
-        .form-group { margin-bottom: 12px; display: flex; flex-direction: column; gap: 5px; }
+        .form-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 6px; }
         label { font-size: 0.85rem; font-weight: 600; color: #555; }
         
-        /* 위아래 수직 배치 레이아웃 */
         .vertical-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
         input[type="text"], input[type="number"] { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; }
         
-        .color-picker-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px; }
-        .color-item { display: flex; align-items: center; justify-content: space-between; background: #f8f9fa; padding: 8px 12px; border-radius: 8px; border: 1px solid #eee; }
+        .color-picker-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 5px; }
+        .color-item { display: flex; align-items: center; justify-content: space-between; background: #f8f9fa; padding: 6px 10px; border-radius: 8px; border: 1px solid #eee; }
         .color-item label { margin: 0; font-size: 0.8rem; font-weight: bold; }
         input[type="color"] { border: none; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; background: none; }
+
+        /* 실시간 예시 미리보기 박스 */
+        .preview-box { display: flex; gap: 10px; align-items: center; background: #f1f3f5; padding: 10px 12px; border-radius: 8px; margin-top: 6px; border: 1px dashed #ccc; }
+        .preview-title { font-size: 0.75rem; color: #666; font-weight: bold; }
+        .preview-btn { padding: 8px 14px; border-radius: 6px; font-weight: bold; font-size: 0.85rem; border: 2px solid transparent; text-align: center; }
 
         .add-btn { background: #34c759; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; }
         .add-btn:active { background: #238636; }
@@ -55,7 +59,7 @@
 </head>
 <body>
 
-    <div id="saveToast">모든 디테일 설정이 성공적으로 저장되었습니다! 💾</div>
+    <div id="saveToast">모든 디테일 설정이 저장되었습니다! 💾</div>
 
     <header>
         <h1>⚙️ 시스템 상세 관리자 설정</h1>
@@ -80,60 +84,104 @@
             </div>
         </div>
 
-        <!-- 2. 항목별 디테일 디자인 커스텀 (색상 & 글씨 크기) -->
+        <!-- 2. 디테일 색상 & 선택시 색상 & 예시 미리보기 커스텀 -->
         <div class="card">
-            <h2>🎨 항목별 스타일 및 디테일 커스텀</h2>
+            <h2>🎨 버튼별 기본 / 선택시 색상 & 예시 미리보기</h2>
             
+            <!-- 구분 버튼 커스텀 -->
             <div class="form-group">
-                <label>📌 구분 버튼 디자인 (포장/매장 등)</label>
+                <label>📌 구분 버튼 디자인 (포장, 매장 등)</label>
                 <div class="color-picker-grid">
-                    <div class="color-item"><label>배경색</label><input type="color" id="typeBgColor" value="#007aff"></div>
-                    <div class="color-item"><label>글자색</label><input type="color" id="typeTextColor" value="#ffffff"></div>
+                    <div class="color-item"><label>기본 배경</label><input type="color" id="typeBgColor" value="#007aff" oninput="updatePreviews()"></div>
+                    <div class="color-item"><label>기본 글자</label><input type="color" id="typeTextColor" value="#ffffff" oninput="updatePreviews()"></div>
+                    <div class="color-item"><label>선택시 배경</label><input type="color" id="typeActiveBgColor" value="#34c759" oninput="updatePreviews()"></div>
+                    <div class="color-item"><label>선택시 글자</label><input type="color" id="typeActiveTextColor" value="#ffffff" oninput="updatePreviews()"></div>
+                </div>
+                <div class="preview-box">
+                    <span class="preview-title">미리보기:</span>
+                    <div class="preview-btn" id="prevTypeNormal">기본 상태</div>
+                    <div class="preview-btn" id="prevTypeActive">선택된 상태</div>
                 </div>
             </div>
 
-            <div class="form-group" style="margin-top: 10px;">
+            <!-- 결제 수단 버튼 커스텀 -->
+            <div class="form-group" style="margin-top: 15px;">
                 <label>💳 결제 수단 버튼 디자인</label>
                 <div class="color-picker-grid">
-                    <div class="color-item"><label>배경색</label><input type="color" id="payBgColor" value="#5856d6"></div>
-                    <div class="color-item"><label>글자색</label><input type="color" id="payTextColor" value="#ffffff"></div>
+                    <div class="color-item"><label>기본 배경</label><input type="color" id="payBgColor" value="#5856d6" oninput="updatePreviews()"></div>
+                    <div class="color-item"><label>기본 글자</label><input type="color" id="payTextColor" value="#ffffff" oninput="updatePreviews()"></div>
+                    <div class="color-item"><label>선택시 배경</label><input type="color" id="payActiveBgColor" value="#ff9500" oninput="updatePreviews()"></div>
+                    <div class="color-item"><label>선택시 글자</label><input type="color" id="payActiveTextColor" value="#ffffff" oninput="updatePreviews()"></div>
+                </div>
+                <div class="preview-box">
+                    <span class="preview-title">미리보기:</span>
+                    <div class="preview-btn" id="prevPayNormal">기본 상태</div>
+                    <div class="preview-btn" id="prevPayActive">선택된 상태</div>
                 </div>
             </div>
 
-            <div class="form-group" style="margin-top: 10px;">
-                <label>🍜 메뉴 카드 디자인 및 글자 크기</label>
+            <!-- 세부 옵션 버튼 커스텀 -->
+            <div class="form-group" style="margin-top: 15px;">
+                <label>⚙️ 세부 옵션 버튼 디자인 (맵기, 토핑 등)</label>
                 <div class="color-picker-grid">
-                    <div class="color-item"><label>배경색</label><input type="color" id="menuBgColor" value="#ffffff"></div>
-                    <div class="color-item"><label>글자색</label><input type="color" id="menuTextColor" value="#111111"></div>
+                    <div class="color-item"><label>기본 배경</label><input type="color" id="optBgColor" value="#e0e0e0" oninput="updatePreviews()"></div>
+                    <div class="color-item"><label>기본 글자</label><input type="color" id="optTextColor" value="#333333" oninput="updatePreviews()"></div>
+                    <div class="color-item"><label>선택시 배경</label><input type="color" id="optActiveBgColor" value="#af52de" oninput="updatePreviews()"></div>
+                    <div class="color-item"><label>선택시 글자</label><input type="color" id="optActiveTextColor" value="#ffffff" oninput="updatePreviews()"></div>
+                </div>
+                <div class="preview-box">
+                    <span class="preview-title">미리보기:</span>
+                    <div class="preview-btn" id="prevOptNormal">기본 상태</div>
+                    <div class="preview-btn" id="prevOptActive">선택된 상태</div>
+                </div>
+            </div>
+
+            <!-- 메뉴 카드 디자인 -->
+            <div class="form-group" style="margin-top: 15px;">
+                <label>🍜 메뉴 카드 디자인 & 글자 크기</label>
+                <div class="color-picker-grid">
+                    <div class="color-item"><label>카드 배경</label><input type="color" id="menuBgColor" value="#ffffff" oninput="updatePreviews()"></div>
+                    <div class="color-item"><label>카드 글자</label><input type="color" id="menuTextColor" value="#111111" oninput="updatePreviews()"></div>
                 </div>
                 <div class="vertical-row" style="margin-top: 5px;">
                     <label>메뉴 글자 크기 (px)</label>
-                    <input type="number" id="menuFontSize" value="16" placeholder="예: 16">
+                    <input type="number" id="menuFontSize" value="16" placeholder="예: 16" oninput="updatePreviews()">
+                </div>
+                <div class="preview-box">
+                    <span class="preview-title">미리보기:</span>
+                    <div class="preview-btn" id="prevMenu" style="width: 100%; text-align: left; border: 1px solid #ddd;">메뉴 이름 예시 (8,000원)</div>
                 </div>
             </div>
 
-            <div class="form-group" style="margin-top: 10px;">
-                <label>⚙️ 세부 옵션 버튼 디자인</label>
+            <!-- 제출 버튼 디자인 -->
+            <div class="form-group" style="margin-top: 15px;">
+                <label>🚀 메인 주문 등록 버튼 디자인</label>
                 <div class="color-picker-grid">
-                    <div class="color-item"><label>배경색</label><input type="color" id="optBgColor" value="#e0e0e0"></div>
-                    <div class="color-item"><label>선택시 배경색</label><input type="color" id="optActiveBgColor" value="#34c759"></div>
-                </div>
-            </div>
-
-            <div class="form-group" style="margin-top: 10px;">
-                <label>🚀 메인 제출 버튼 디자인 및 글자 크기</label>
-                <div class="color-picker-grid">
-                    <div class="color-item"><label>배경색</label><input type="color" id="submitBgColor" value="#007aff"></div>
-                    <div class="color-item"><label>글자색</label><input type="color" id="submitTextColor" value="#ffffff"></div>
+                    <div class="color-item"><label>버튼 배경</label><input type="color" id="submitBgColor" value="#007aff" oninput="updatePreviews()"></div>
+                    <div class="color-item"><label>버튼 글자</label><input type="color" id="submitTextColor" value="#ffffff" oninput="updatePreviews()"></div>
                 </div>
                 <div class="vertical-row" style="margin-top: 5px;">
                     <label>제출 버튼 글자 크기 (px)</label>
-                    <input type="number" id="submitFontSize" value="18" placeholder="예: 18">
+                    <input type="number" id="submitFontSize" value="18" placeholder="예: 18" oninput="updatePreviews()">
+                </div>
+                <div class="preview-box">
+                    <span class="preview-title">미리보기:</span>
+                    <div class="preview-btn" id="prevSubmit" style="flex:1;">주문 등록하기 🚀</div>
                 </div>
             </div>
         </div>
 
-        <!-- 3. 주문 구분 커스텀 -->
+        <!-- 3. 커스텀 색상 그룹 동적 추가 -->
+        <div class="card">
+            <h2>➕ 사용자 지정 항목 커스텀 그룹 추가</h2>
+            <div class="vertical-row">
+                <input type="text" id="newCustomStyleName" placeholder="새 커스텀 항목 이름 (예: 이벤트 버튼, 특수 옵션)">
+                <button type="button" class="add-btn" onclick="addCustomStyleGroup()">커스텀 항목 추가</button>
+            </div>
+            <div class="item-list" id="customStylesList"></div>
+        </div>
+
+        <!-- 4. 주문 구분 커스텀 -->
         <div class="card">
             <h2>🛍️ 주문 구분 설정 (포장, 매장 등)</h2>
             <div class="vertical-row">
@@ -143,7 +191,7 @@
             <div class="item-list" id="typesList"></div>
         </div>
 
-        <!-- 4. 결제 수단 커스텀 -->
+        <!-- 5. 결제 수단 커스텀 -->
         <div class="card">
             <h2>💳 결제 수단 설정</h2>
             <div class="vertical-row">
@@ -153,7 +201,7 @@
             <div class="item-list" id="paysList"></div>
         </div>
 
-        <!-- 5. 메뉴 및 세부 옵션 관리 (위아래 수직 구성) -->
+        <!-- 6. 메뉴 및 세부 옵션 관리 -->
         <div class="card">
             <h2>🍜 메뉴 및 세부 옵션 관리</h2>
             <div class="vertical-row">
@@ -182,18 +230,18 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // 기본 설정값을 모두 빈칸/비어있음으로 초기화
         let settings = {
             storeName: '',
             orderTitle: '',
             kitchenTitle: '',
             styles: {
-                typeBg: '#007aff', typeText: '#ffffff',
-                payBg: '#5856d6', payText: '#ffffff',
+                typeBg: '#007aff', typeText: '#ffffff', typeActiveBg: '#34c759', typeActiveText: '#ffffff',
+                payBg: '#5856d6', payText: '#ffffff', payActiveBg: '#ff9500', payActiveText: '#ffffff',
+                optBg: '#e0e0e0', optText: '#333333', optActiveBg: '#af52de', optActiveText: '#ffffff',
                 menuBg: '#ffffff', menuText: '#111111', menuFontSize: 16,
-                optBg: '#e0e0e0', optActiveBg: '#34c759',
                 submitBg: '#007aff', submitText: '#ffffff', submitFontSize: 18
             },
+            customStyles: [],
             types: [],
             pays: [],
             menus: []
@@ -206,9 +254,59 @@
                 settings = Object.assign(settings, data);
             }
             renderAdminUI();
+            updatePreviews();
         }, () => {
             document.getElementById('syncStatus').innerText = '🔴 동기화 오류';
         });
+
+        function updatePreviews() {
+            // Types
+            const tBg = document.getElementById('typeBgColor').value;
+            const tTxt = document.getElementById('typeTextColor').value;
+            const tABg = document.getElementById('typeActiveBgColor').value;
+            const tATxt = document.getElementById('typeActiveTextColor').value;
+            
+            const pNorm = document.getElementById('prevTypeNormal');
+            const pAct = document.getElementById('prevTypeActive');
+            pNorm.style.backgroundColor = tBg; pNorm.style.color = tTxt;
+            pAct.style.backgroundColor = tABg; pAct.style.color = tATxt;
+
+            // Pays
+            const payBg = document.getElementById('payBgColor').value;
+            const payTxt = document.getElementById('payTextColor').value;
+            const payABg = document.getElementById('payActiveBgColor').value;
+            const payATxt = document.getElementById('payActiveTextColor').value;
+
+            const prevPayN = document.getElementById('prevPayNormal');
+            const prevPayA = document.getElementById('prevPayActive');
+            prevPayN.style.backgroundColor = payBg; prevPayN.style.color = payTxt;
+            prevPayA.style.backgroundColor = payABg; prevPayA.style.color = payATxt;
+
+            // Options
+            const oBg = document.getElementById('optBgColor').value;
+            const oTxt = document.getElementById('optTextColor').value;
+            const oABg = document.getElementById('optActiveBgColor').value;
+            const oATxt = document.getElementById('optActiveTextColor').value;
+
+            const prevOptN = document.getElementById('prevOptNormal');
+            const prevOptA = document.getElementById('prevOptActive');
+            prevOptN.style.backgroundColor = oBg; prevOptN.style.color = oTxt;
+            prevOptA.style.backgroundColor = oABg; prevOptA.style.color = oATxt;
+
+            // Menu
+            const mBg = document.getElementById('menuBgColor').value;
+            const mTxt = document.getElementById('menuTextColor').value;
+            const mSize = document.getElementById('menuFontSize').value || 16;
+            const prevMenu = document.getElementById('prevMenu');
+            prevMenu.style.backgroundColor = mBg; prevMenu.style.color = mTxt; prevMenu.style.fontSize = mSize + 'px';
+
+            // Submit
+            const sBg = document.getElementById('submitBgColor').value;
+            const sTxt = document.getElementById('submitTextColor').value;
+            const sSize = document.getElementById('submitFontSize').value || 18;
+            const prevSub = document.getElementById('prevSubmit');
+            prevSub.style.backgroundColor = sBg; prevSub.style.color = sTxt; prevSub.style.fontSize = sSize + 'px';
+        }
 
         function renderAdminUI() {
             document.getElementById('storeNameInput').value = settings.storeName || '';
@@ -218,17 +316,40 @@
             if (settings.styles) {
                 document.getElementById('typeBgColor').value = settings.styles.typeBg || '#007aff';
                 document.getElementById('typeTextColor').value = settings.styles.typeText || '#ffffff';
+                document.getElementById('typeActiveBgColor').value = settings.styles.typeActiveBg || '#34c759';
+                document.getElementById('typeActiveTextColor').value = settings.styles.typeActiveText || '#ffffff';
+
                 document.getElementById('payBgColor').value = settings.styles.payBg || '#5856d6';
                 document.getElementById('payTextColor').value = settings.styles.payText || '#ffffff';
+                document.getElementById('payActiveBgColor').value = settings.styles.payActiveBg || '#ff9500';
+                document.getElementById('payActiveTextColor').value = settings.styles.payActiveText || '#ffffff';
+
+                document.getElementById('optBgColor').value = settings.styles.optBg || '#e0e0e0';
+                document.getElementById('optTextColor').value = settings.styles.optText || '#333333';
+                document.getElementById('optActiveBgColor').value = settings.styles.optActiveBg || '#af52de';
+                document.getElementById('optActiveTextColor').value = settings.styles.optActiveText || '#ffffff';
+
                 document.getElementById('menuBgColor').value = settings.styles.menuBg || '#ffffff';
                 document.getElementById('menuTextColor').value = settings.styles.menuText || '#111111';
                 document.getElementById('menuFontSize').value = settings.styles.menuFontSize || 16;
-                document.getElementById('optBgColor').value = settings.styles.optBg || '#e0e0e0';
-                document.getElementById('optActiveBgColor').value = settings.styles.optActiveBg || '#34c759';
+
                 document.getElementById('submitBgColor').value = settings.styles.submitBg || '#007aff';
                 document.getElementById('submitTextColor').value = settings.styles.submitText || '#ffffff';
                 document.getElementById('submitFontSize').value = settings.styles.submitFontSize || 18;
             }
+
+            // Custom Styles List
+            const customContainer = document.getElementById('customStylesList');
+            customContainer.innerHTML = '';
+            (settings.customStyles || []).forEach((c, idx) => {
+                customContainer.innerHTML += `
+                    <div class="item-row">
+                        <div class="item-row-header">
+                            <span class="item-info">🎨 ${c.name}</span>
+                            <button type="button" class="delete-btn" onclick="removeCustomStyleGroup(${idx})">삭제</button>
+                        </div>
+                    </div>`;
+            });
 
             // Types
             const typesContainer = document.getElementById('typesList');
@@ -284,6 +405,20 @@
             });
         }
 
+        function addCustomStyleGroup() {
+            const name = document.getElementById('newCustomStyleName').value.trim();
+            if (!name) { alert('커스텀 항목 이름을 입력해주세요!'); return; }
+            if (!settings.customStyles) settings.customStyles = [];
+            settings.customStyles.push({ name });
+            document.getElementById('newCustomStyleName').value = '';
+            renderAdminUI();
+        }
+
+        function removeCustomStyleGroup(idx) {
+            settings.customStyles.splice(idx, 1);
+            renderAdminUI();
+        }
+
         function addItem(category) {
             const inputId = category === 'types' ? 'newTypeInput' : 'newPayInput';
             const val = document.getElementById(inputId).value.trim();
@@ -332,13 +467,23 @@
             settings.styles = {
                 typeBg: document.getElementById('typeBgColor').value,
                 typeText: document.getElementById('typeTextColor').value,
+                typeActiveBg: document.getElementById('typeActiveBgColor').value,
+                typeActiveText: document.getElementById('typeActiveTextColor').value,
+
                 payBg: document.getElementById('payBgColor').value,
                 payText: document.getElementById('payTextColor').value,
+                payActiveBg: document.getElementById('payActiveBgColor').value,
+                payActiveText: document.getElementById('payActiveTextColor').value,
+
+                optBg: document.getElementById('optBgColor').value,
+                optText: document.getElementById('optTextColor').value,
+                optActiveBg: document.getElementById('optActiveBgColor').value,
+                optActiveText: document.getElementById('optActiveTextColor').value,
+
                 menuBg: document.getElementById('menuBgColor').value,
                 menuText: document.getElementById('menuTextColor').value,
                 menuFontSize: parseInt(document.getElementById('menuFontSize').value) || 16,
-                optBg: document.getElementById('optBgColor').value,
-                optActiveBg: document.getElementById('optActiveBgColor').value,
+
                 submitBg: document.getElementById('submitBgColor').value,
                 submitText: document.getElementById('submitTextColor').value,
                 submitFontSize: parseInt(document.getElementById('submitFontSize').value) || 18
