@@ -17,7 +17,7 @@
 
         .connection-status { font-size: 0.8rem; color: #2e7d32; background: #e8f5e9; padding: 4px 10px; border-radius: 12px; display: inline-block; font-weight: bold; margin-bottom: 10px; }
         
-        .container { display: flex; flex-direction: column; gap: 15px; max-width: 600px; margin: 0 auto; }
+        .container { display: flex; flex-direction: column; gap: 15px; max-width: 650px; margin: 0 auto; }
         .card { background: white; padding: 18px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
         .card h2 { font-size: 1.05rem; margin-bottom: 12px; color: #007aff; display: flex; justify-content: space-between; align-items: center; }
 
@@ -25,7 +25,7 @@
         .order-card { background: #fff; border-left: 8px solid #007aff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.08); display: flex; flex-direction: column; gap: 10px; }
         
         .badge { font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; font-weight: bold; color: white; display: inline-block; background: #5856d6; }
-        .menu-name { font-size: 1.2rem; font-weight: bold; color: #111; line-height: 1.4; }
+        .menu-name { font-size: 1.25rem; font-weight: bold; color: #111; line-height: 1.4; word-break: break-all; }
         .time { font-size: 0.75rem; color: #888; }
 
         .btn-group { display: flex; gap: 8px; }
@@ -42,8 +42,8 @@
     <div class="container">
         <header>
             <div class="header-title-box">
-                <span class="store-badge" id="displayStoreName">매장명</span>
-                <h1 id="displayKitchenTitle">주방 실시간 보드</h1>
+                <span class="store-badge" id="displayStoreName"></span>
+                <h1 id="displayKitchenTitle"></h1>
             </div>
             <a href="admin.html" class="admin-link-btn">⚙️ 관리자 설정</a>
         </header>
@@ -73,8 +73,8 @@
         db.ref('system_settings').on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                document.getElementById('displayStoreName').innerText = data.storeName || '매장명';
-                document.getElementById('displayKitchenTitle').innerText = data.kitchenTitle || '주방 보드';
+                document.getElementById('displayStoreName').innerText = data.storeName || '';
+                document.getElementById('displayKitchenTitle').innerText = data.kitchenTitle || '주방 실시간 보드';
             }
         });
 
