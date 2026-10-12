@@ -12,46 +12,46 @@
         .connection-status { font-size: 0.85rem; color: #2e7d32; background: #e8f5e9; padding: 4px 12px; border-radius: 12px; display: inline-block; font-weight: bold; }
         
         .container { display: flex; flex-direction: column; gap: 15px; max-width: 680px; margin: 0 auto; }
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: 2px solid #000; }
         .card h2 { font-size: 1.1rem; margin-bottom: 15px; color: #007aff; border-bottom: 2px solid #f0f2f5; padding-bottom: 8px; }
         
         .form-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 6px; }
         label { font-size: 0.85rem; font-weight: 600; color: #555; }
         
         .vertical-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
-        input[type="text"], input[type="number"] { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; }
+        input[type="text"], input[type="number"] { width: 100%; padding: 10px; border: 2px solid #000; border-radius: 8px; font-size: 0.95rem; }
         
         .color-picker-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 5px; }
-        .color-item { display: flex; align-items: center; justify-content: space-between; background: #f8f9fa; padding: 6px 10px; border-radius: 8px; border: 1px solid #eee; }
+        .color-item { display: flex; align-items: center; justify-content: space-between; background: #f8f9fa; padding: 6px 10px; border-radius: 8px; border: 2px solid #000; }
         .color-item label { margin: 0; font-size: 0.8rem; font-weight: bold; }
         input[type="color"] { border: none; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; background: none; }
 
-        /* 실시간 예시 미리보기 박스 */
-        .preview-box { display: flex; gap: 10px; align-items: center; background: #f1f3f5; padding: 10px 12px; border-radius: 8px; margin-top: 6px; border: 1px dashed #ccc; }
+        .preview-box { display: flex; gap: 10px; align-items: center; background: #f1f3f5; padding: 10px 12px; border-radius: 8px; margin-top: 6px; border: 2px dashed #000; }
         .preview-title { font-size: 0.75rem; color: #666; font-weight: bold; }
-        .preview-btn { padding: 8px 14px; border-radius: 6px; font-weight: bold; font-size: 0.85rem; border: 2px solid transparent; text-align: center; }
+        .preview-btn { padding: 8px 14px; border-radius: 6px; font-weight: bold; font-size: 0.85rem; border: 2px solid #000000; text-align: center; }
 
-        .add-btn { background: #34c759; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; }
+        .add-btn { background: #34c759; color: white; border: 2px solid #000; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; }
         .add-btn:active { background: #238636; }
 
         .item-list { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
-        .item-row { display: flex; flex-direction: column; gap: 8px; background: #f8f9fa; padding: 12px; border-radius: 8px; border: 1px solid #eee; }
+        .item-row { display: flex; flex-direction: column; gap: 8px; background: #f8f9fa; padding: 12px; border-radius: 8px; border: 2px solid #000; }
         .item-row-header { display: flex; justify-content: space-between; align-items: center; }
         .item-info { font-size: 1rem; font-weight: bold; color: #111; word-break: break-all; }
-        .delete-btn { background: #ff3b30; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; font-weight: bold; align-self: flex-end; }
+        .delete-btn { background: #ff3b30; color: white; border: 2px solid #000; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; font-weight: bold; align-self: flex-end; }
 
-        .sub-option-tag { display: inline-block; background: #e0e0e0; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; margin: 2px; }
+        .sub-option-tag { display: inline-block; background: #e0e0e0; border: 2px solid #000; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; margin: 2px; }
 
-        .save-all-btn { width: 100%; background: #007aff; color: white; border: none; padding: 16px; border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 12px rgba(0,122,255,0.3); }
+        .save-all-btn { width: 100%; background: #007aff; color: white; border: 2px solid #000; padding: 16px; border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 12px rgba(0,122,255,0.3); }
         .save-all-btn:active { background: #0056b3; }
 
         .nav-links { display: flex; gap: 10px; margin-top: 10px; }
-        .nav-btn { flex: 1; text-align: center; background: #e4e6eb; color: #333; padding: 10px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: bold; }
+        .nav-btn { flex: 1; text-align: center; background: #e4e6eb; color: #333; padding: 10px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: bold; border: 2px solid #000; }
 
         #saveToast {
             position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
             background: #34c759; color: white; padding: 12px 24px; border-radius: 25px;
             font-size: 1rem; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 9999; display: none;
+            border: 2px solid #000;
         }
     </style>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -72,23 +72,22 @@
             <h2>🏪 가게 상호명 및 타이틀 설정</h2>
             <div class="form-group">
                 <label>가게 상호명</label>
-                <input type="text" id="storeNameInput" placeholder="예: 가게명을 입력하세요">
+                <input type="text" id="storeNameInput" placeholder="예: Noodle Festival">
             </div>
             <div class="form-group">
                 <label>주문 페이지 메인 제목</label>
-                <input type="text" id="orderTitleInput" placeholder="예: 주문 접수 페이지">
+                <input type="text" id="orderTitleInput" placeholder="예: 🍜 간편 주문 접수">
             </div>
             <div class="form-group">
                 <label>주방 보드 메인 제목</label>
-                <input type="text" id="kitchenTitleInput" placeholder="예: 주방 실시간 보드">
+                <input type="text" id="kitchenTitleInput" placeholder="예: 🍳 주방 실시간 보드">
             </div>
         </div>
 
-        <!-- 2. 디테일 색상 & 선택시 색상 & 예시 미리보기 커스텀 -->
+        <!-- 2. 테두리 검정 고정 및 색상 커스텀 -->
         <div class="card">
-            <h2>🎨 버튼별 기본 / 선택시 색상 & 예시 미리보기</h2>
+            <h2>🎨 버튼별 검은색 테두리 & 색상 커스텀</h2>
             
-            <!-- 구분 버튼 커스텀 -->
             <div class="form-group">
                 <label>📌 구분 버튼 디자인 (포장, 매장 등)</label>
                 <div class="color-picker-grid">
@@ -104,7 +103,6 @@
                 </div>
             </div>
 
-            <!-- 결제 수단 버튼 커스텀 -->
             <div class="form-group" style="margin-top: 15px;">
                 <label>💳 결제 수단 버튼 디자인</label>
                 <div class="color-picker-grid">
@@ -120,9 +118,8 @@
                 </div>
             </div>
 
-            <!-- 세부 옵션 버튼 커스텀 -->
             <div class="form-group" style="margin-top: 15px;">
-                <label>⚙️ 세부 옵션 버튼 디자인 (맵기, 토핑 등)</label>
+                <label>⚙️ 세부 옵션 버튼 디자인</label>
                 <div class="color-picker-grid">
                     <div class="color-item"><label>기본 배경</label><input type="color" id="optBgColor" value="#e0e0e0" oninput="updatePreviews()"></div>
                     <div class="color-item"><label>기본 글자</label><input type="color" id="optTextColor" value="#333333" oninput="updatePreviews()"></div>
@@ -136,7 +133,6 @@
                 </div>
             </div>
 
-            <!-- 메뉴 카드 디자인 -->
             <div class="form-group" style="margin-top: 15px;">
                 <label>🍜 메뉴 카드 디자인 & 글자 크기</label>
                 <div class="color-picker-grid">
@@ -149,11 +145,10 @@
                 </div>
                 <div class="preview-box">
                     <span class="preview-title">미리보기:</span>
-                    <div class="preview-btn" id="prevMenu" style="width: 100%; text-align: left; border: 1px solid #ddd;">메뉴 이름 예시 (8,000원)</div>
+                    <div class="preview-btn" id="prevMenu" style="width: 100%; text-align: left;">메뉴 이름 예시 (8,000원)</div>
                 </div>
             </div>
 
-            <!-- 제출 버튼 디자인 -->
             <div class="form-group" style="margin-top: 15px;">
                 <label>🚀 메인 주문 등록 버튼 디자인</label>
                 <div class="color-picker-grid">
@@ -171,17 +166,7 @@
             </div>
         </div>
 
-        <!-- 3. 커스텀 색상 그룹 동적 추가 -->
-        <div class="card">
-            <h2>➕ 사용자 지정 항목 커스텀 그룹 추가</h2>
-            <div class="vertical-row">
-                <input type="text" id="newCustomStyleName" placeholder="새 커스텀 항목 이름 (예: 이벤트 버튼, 특수 옵션)">
-                <button type="button" class="add-btn" onclick="addCustomStyleGroup()">커스텀 항목 추가</button>
-            </div>
-            <div class="item-list" id="customStylesList"></div>
-        </div>
-
-        <!-- 4. 주문 구분 커스텀 -->
+        <!-- 3. 주문 구분 커스텀 -->
         <div class="card">
             <h2>🛍️ 주문 구분 설정 (포장, 매장 등)</h2>
             <div class="vertical-row">
@@ -191,7 +176,7 @@
             <div class="item-list" id="typesList"></div>
         </div>
 
-        <!-- 5. 결제 수단 커스텀 -->
+        <!-- 4. 결제 수단 커스텀 -->
         <div class="card">
             <h2>💳 결제 수단 설정</h2>
             <div class="vertical-row">
@@ -201,7 +186,7 @@
             <div class="item-list" id="paysList"></div>
         </div>
 
-        <!-- 6. 메뉴 및 세부 옵션 관리 -->
+        <!-- 5. 메뉴 및 세부 옵션 관리 -->
         <div class="card">
             <h2>🍜 메뉴 및 세부 옵션 관리</h2>
             <div class="vertical-row">
@@ -225,7 +210,7 @@
 
     <script>
         const firebaseConfig = {
-            databaseURL: "https://night-market-order-8a9ac-default-rtdb.firebaseio.com/"
+            databaseURL: "https://noodle-festival-default-rtdb.firebaseio.com/"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
@@ -241,7 +226,6 @@
                 menuBg: '#ffffff', menuText: '#111111', menuFontSize: 16,
                 submitBg: '#007aff', submitText: '#ffffff', submitFontSize: 18
             },
-            customStyles: [],
             types: [],
             pays: [],
             menus: []
@@ -260,7 +244,6 @@
         });
 
         function updatePreviews() {
-            // Types
             const tBg = document.getElementById('typeBgColor').value;
             const tTxt = document.getElementById('typeTextColor').value;
             const tABg = document.getElementById('typeActiveBgColor').value;
@@ -271,7 +254,6 @@
             pNorm.style.backgroundColor = tBg; pNorm.style.color = tTxt;
             pAct.style.backgroundColor = tABg; pAct.style.color = tATxt;
 
-            // Pays
             const payBg = document.getElementById('payBgColor').value;
             const payTxt = document.getElementById('payTextColor').value;
             const payABg = document.getElementById('payActiveBgColor').value;
@@ -282,7 +264,6 @@
             prevPayN.style.backgroundColor = payBg; prevPayN.style.color = payTxt;
             prevPayA.style.backgroundColor = payABg; prevPayA.style.color = payATxt;
 
-            // Options
             const oBg = document.getElementById('optBgColor').value;
             const oTxt = document.getElementById('optTextColor').value;
             const oABg = document.getElementById('optActiveBgColor').value;
@@ -293,14 +274,12 @@
             prevOptN.style.backgroundColor = oBg; prevOptN.style.color = oTxt;
             prevOptA.style.backgroundColor = oABg; prevOptA.style.color = oATxt;
 
-            // Menu
             const mBg = document.getElementById('menuBgColor').value;
             const mTxt = document.getElementById('menuTextColor').value;
             const mSize = document.getElementById('menuFontSize').value || 16;
             const prevMenu = document.getElementById('prevMenu');
             prevMenu.style.backgroundColor = mBg; prevMenu.style.color = mTxt; prevMenu.style.fontSize = mSize + 'px';
 
-            // Submit
             const sBg = document.getElementById('submitBgColor').value;
             const sTxt = document.getElementById('submitTextColor').value;
             const sSize = document.getElementById('submitFontSize').value || 18;
@@ -334,24 +313,10 @@
                 document.getElementById('menuFontSize').value = settings.styles.menuFontSize || 16;
 
                 document.getElementById('submitBgColor').value = settings.styles.submitBg || '#007aff';
-                document.getElementById('submitTextColor').value = settings.styles.submitText || '#ffffff';
+                document.getElementById('submitTextColor').value = settings.styles.submitTextColor || '#ffffff';
                 document.getElementById('submitFontSize').value = settings.styles.submitFontSize || 18;
             }
 
-            // Custom Styles List
-            const customContainer = document.getElementById('customStylesList');
-            customContainer.innerHTML = '';
-            (settings.customStyles || []).forEach((c, idx) => {
-                customContainer.innerHTML += `
-                    <div class="item-row">
-                        <div class="item-row-header">
-                            <span class="item-info">🎨 ${c.name}</span>
-                            <button type="button" class="delete-btn" onclick="removeCustomStyleGroup(${idx})">삭제</button>
-                        </div>
-                    </div>`;
-            });
-
-            // Types
             const typesContainer = document.getElementById('typesList');
             typesContainer.innerHTML = '';
             (settings.types || []).forEach((t, idx) => {
@@ -364,7 +329,6 @@
                     </div>`;
             });
 
-            // Pays
             const paysContainer = document.getElementById('paysList');
             paysContainer.innerHTML = '';
             (settings.pays || []).forEach((p, idx) => {
@@ -377,7 +341,6 @@
                     </div>`;
             });
 
-            // Menus
             const menusContainer = document.getElementById('menusList');
             menusContainer.innerHTML = '';
             (settings.menus || []).forEach((m, idx) => {
@@ -403,20 +366,6 @@
                         </div>
                     </div>`;
             });
-        }
-
-        function addCustomStyleGroup() {
-            const name = document.getElementById('newCustomStyleName').value.trim();
-            if (!name) { alert('커스텀 항목 이름을 입력해주세요!'); return; }
-            if (!settings.customStyles) settings.customStyles = [];
-            settings.customStyles.push({ name });
-            document.getElementById('newCustomStyleName').value = '';
-            renderAdminUI();
-        }
-
-        function removeCustomStyleGroup(idx) {
-            settings.customStyles.splice(idx, 1);
-            renderAdminUI();
         }
 
         function addItem(category) {
